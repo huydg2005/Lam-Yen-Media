@@ -2,11 +2,11 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LAMYENMEDIA | Portfolio</title>
     <style>
         /* --- 1. SETUP CHUNG --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html {
             width: 100%; height: 100%;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -41,162 +41,112 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             overflow-y: auto;
         }
-
-        .overlay.is-contact {
-            background: #000 !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
-
         .overlay.active { transform: translateY(0); }
+        .overlay.is-contact { background: #000 !important; backdrop-filter: none !important; }
 
-        /* TABS MÀU TRẮNG */
         .talents-tabs, .about-tabs, .works-tabs { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .tab { font-size: 0.7rem; color: #fff; text-transform: uppercase; border-bottom: 2px solid #fff; padding-bottom: 15px; display: inline-block; }
 
-        /* GLITCH COMING SOON - HIỆU ỨNG NGHỆ */
-        .coming-soon-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        /* GLITCH COMING SOON */
+        .coming-soon-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; }
+        .glitch-works { font-size: clamp(2.5rem, 8vw, 8rem); font-weight: 900; text-transform: uppercase; letter-spacing: 15px; position: relative; color: #fff; text-align: center; }
+        .glitch-works::before, .glitch-works::after { content: "COMING SOON"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .glitch-works::before { left: 2px; text-shadow: -2px 0 #ff00c1; clip: rect(44px, 999px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch-works::after { left: -2px; text-shadow: -2px 0 #00fff9; clip: rect(44px, 999px, 56px, 0); animation: glitch-anim-2 5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(31px, 9999px, 94px, 0); } 100% { clip: rect(10px, 9999px, 85px, 0); } }
+        @keyframes glitch-anim-2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 100% { clip: rect(15px, 9999px, 30px, 0); } }
 
-        .glitch-works {
-            font-size: clamp(3rem, 10vw, 8rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 20px;
-            position: relative;
-            color: #fff;
-        }
-
-        .glitch-works::before, .glitch-works::after {
-            content: "COMING SOON";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
-
-        .glitch-works::before {
-            left: 2px;
-            text-shadow: -2px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-
-        .glitch-works::after {
-            left: -2px;
-            text-shadow: -2px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim-2 5s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch-anim {
-            0% { clip: rect(31px, 9999px, 94px, 0); }
-            20% { clip: rect(62px, 9999px, 42px, 0); }
-            100% { clip: rect(10px, 9999px, 85px, 0); }
-        }
-
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); }
-            100% { clip: rect(15px, 9999px, 30px, 0); }
-        }
-
-        /* DIRECTOR GRID */
-        .director-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .director-item { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        /* TALENTS GRID */
+        .director-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .director-item { opacity: 0; transform: translateY(30px); transition: 0.7s ease; }
         .overlay.active .director-item { opacity: 1; transform: translateY(0); }
-        .image-box { width: 100%; height: 220px; background: rgba(255,255,255,0.05); transition: 0.5s ease; overflow: hidden; }
-        .image-box:hover { transform: scale(1.03); }
+        .image-box { width: 100%; aspect-ratio: 16/9; background: rgba(255,255,255,0.05); overflow: hidden; }
         .image-box img { width: 100%; height: 100%; object-fit: cover; }
-        .director-name { margin-top: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.7); font-weight: 500; }
+        .director-name { margin-top: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: bold; }
 
-        .about-text-container { max-width: 900px; margin: 0 auto; text-align: center; }
-        .about-text-container p { font-size: 1.4rem; line-height: 1.6; margin-bottom: 25px; font-weight: 300; color: rgba(255,255,255,0.9); }
+        /* ABOUT US */
+        .about-text-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .about-text-container p { font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.6; margin-bottom: 25px; font-weight: 300; color: rgba(255,255,255,0.9); }
 
-        /* CONTACT GRID */
-        .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .label-grey { color: rgba(255, 255, 255, 0.4); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px; }
-        .contact-info-text { font-size: 1.1rem; font-weight: 700; line-height: 1.5; text-transform: uppercase; margin-bottom: 40px; }
-        .social-links { display: flex; gap: 20px; font-weight: 700; font-size: 0.8rem; }
-        .social-links a { color: #fff; text-decoration: none; }
-        .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .form-item { border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; }
-        .form-item.full { grid-column: span 2; }
-        .form-item label { display: block; color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; margin-bottom: 10px; }
-        .form-item input, .form-item textarea { width: 100%; background: none; border: none; color: #fff; font-family: inherit; font-size: 1rem; outline: none; text-transform: uppercase; }
-        .btn-submit { grid-column: span 2; background: #1a1a1a; color: #fff; border: none; padding: 20px; font-weight: 700; text-transform: uppercase; cursor: pointer; margin-top: 20px; transition: 0.3s; border-radius: 4px; }
-        .btn-submit:hover { background: #fff; color: #000; }
+        /* CONTACT */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px; max-width: 1200px; margin: 0 auto; }
+        .label-grey { color: rgba(255,255,255,0.4); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .contact-info-text { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; }
+        .social-links a { color: #fff; text-decoration: none; font-weight: 700; font-size: 0.8rem; margin-right: 15px; }
+        .form-item { border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 30px; }
+        .form-item label { display: block; color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-bottom: 5px; }
+        .form-item input, .form-item textarea { width: 100%; background: none; border: none; color: #fff; outline: none; font-size: 1rem; text-transform: uppercase; }
+        .btn-submit { background: #fff; color: #000; border: none; padding: 15px; width: 100%; font-weight: 700; text-transform: uppercase; cursor: pointer; }
 
-        .close-btn { position: absolute; bottom: 40px; right: 50px; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+        .close-btn { position: absolute; bottom: 30px; right: 30px; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
 
         /* --- 4. MAIN INTERFACE --- */
         .main-container { transition: all 0.8s cubic-bezier(0.85, 0, 0.15, 1); width: 100%; height: 100vh; display: flex; flex-direction: column; }
-        #bg-area {
-            flex: 1; height: 100vh; display: flex; align-items: center; justify-content: space-between;
-            position: relative; transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
-            background-image: linear-gradient(to right, rgba(0,0,0,0.2) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.2) 100%);
-        }
-        .nav-arrow { background: none; border: none; color: inherit; font-size: 2.5rem; padding: 40px; cursor: pointer; z-index: 100; opacity: 0.4; transition: 0.3s; }
-        .nav-arrow:hover { opacity: 1; transform: scale(1.2); }
+        #bg-area { flex: 1; height: 100vh; display: flex; align-items: center; justify-content: space-between; position: relative; transition: background-color 0.8s ease; cursor: pointer; }
+        .nav-arrow { background: none; border: none; color: inherit; font-size: 2rem; padding: 30px; cursor: pointer; z-index: 100; opacity: 0.3; }
 
         .project-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 50px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
-        .project-title { font-size: clamp(3rem, 8vw, 9rem); font-weight: 800; line-height: 0.9; letter-spacing: -4px; text-transform: uppercase; }
-        .project-info { text-align: right; font-size: 0.9rem; line-height: 1.8; }
+        .project-title { font-size: clamp(3rem, 10vw, 9rem); font-weight: 800; line-height: 0.9; letter-spacing: -4px; text-transform: uppercase; }
+        .project-info { text-align: right; font-size: 0.8rem; line-height: 1.6; }
         .info-value { font-weight: bold; margin-left: 5px; }
+
+        /* --- 5. RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .main-header { padding: 25px; }
+            .logo { font-size: 1.3rem; }
+            .main-nav { display: none; } /* Ẩn menu chính trên đt để tối giản */
+            .project-footer { flex-direction: column; align-items: flex-start; padding: 25px; }
+            .project-title { font-size: 4rem; letter-spacing: -2px; }
+            .project-info { text-align: left; margin-top: 15px; }
+            .nav-arrow { display: none; } /* Dùng swipe thay thế */
+        }
 
         .fade { animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body>
+<body id="body-main">
 
-    <!-- OVERLAY: TALENTS -->
+    <!-- OVERLAYS -->
     <div id="talents-menu" class="overlay">
         <div class="talents-tabs"><span class="tab">DIRECTORS / TALENTS</span></div>
         <div class="director-grid">
-            <div class="director-item"><div class="image-box"><img src="tu.jpeg"></div><p class="director-name">Nhat Tu</p></div>
-            <div class="director-item"><div class="image-box"><img src="huy.jpg"></div><p class="director-name">Duong Huy</p></div>
-            <div class="director-item"><div class="image-box"><img src="phuc.jpeg"></div><p class="director-name">Hoang Phuc</p></div>
-            <div class="director-item"><div class="image-box"><img src="tri.jpeg"></div><p class="director-name">Tri Minh</p></div>
+            <div class="director-item"><div class="image-box"><img src="img/tu.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TU'"></div><p class="director-name">Nhat Tu</p></div>
+            <div class="director-item"><div class="image-box"><img src="img/huy.jpg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=HUY'"></div><p class="director-name">Duong Huy</p></div>
+            <div class="director-item"><div class="image-box"><img src="img/phuc.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=PHUC'"></div><p class="director-name">Hoang Phuc</p></div>
+            <div class="director-item"><div class="image-box"><img src="img/tri.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TRI'"></div><p class="director-name">Tri Minh</p></div>
         </div>
         <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
     </div>
 
-    <!-- OVERLAY: ABOUT US -->
     <div id="about-menu" class="overlay">
         <div class="about-tabs"><span class="tab">ABOUT US</span></div>
         <div class="about-text-container">
-            <p>Chúng tôi biến những ý tưởng sơ khai trên trang giấy thành những sản phẩm hình ảnh có sức lan tỏa.</p>
+            <p>Chúng tôi là một nhóm gồm <strong>4 sinh viên</strong> Công nghệ thông tin và Truyền thông, gặp nhau tại điểm giao thoa giữa tư duy kỹ thuật logic và tâm hồn nghệ thuật bay bổng.</p>
+            <p>Khởi đầu từ những bài tập nhóm và những thước phim quay vội, chúng tôi đã cùng nhau biến những ý tưởng sơ khai thành những sản phẩm hình ảnh có sức lan tỏa.</p>
+            <p>Với <strong>LAMYENMEDIA</strong>, mỗi dự án là một hành trình kể chuyện bằng ánh sáng, âm thanh và cảm xúc của cả 4 thành viên.</p>
         </div>
         <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
     </div>
 
-    <!-- OVERLAY: WORKS (COMING SOON) -->
     <div id="works-menu" class="overlay">
         <div class="works-tabs"><span class="tab">OUR WORKS</span></div>
-        <div class="coming-soon-wrapper">
-            <h2 class="glitch-works">COMING SOON</h2>
-        </div>
+        <div class="coming-soon-wrapper"><h2 class="glitch-works">COMING SOON</h2></div>
         <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
     </div>
 
-    <!-- OVERLAY: CONTACT -->
     <div id="contact-menu" class="overlay is-contact">
         <div class="contact-grid">
             <div class="contact-left">
-                <div style="margin-bottom: 50px;"><span class="label-grey">/ MAIL TO</span><p class="contact-info-text">LAMYENMEDIA.VN<br>LAMYENMEDIA@GMAIL.COM</p></div>
-                <div style="margin-bottom: 50px;"><span class="label-grey">/ LOCATION</span><p class="contact-info-text">TPHCM VIETNAM</p><p id="current-time" style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px;"></p></div>
-                <div style="margin-bottom: 50px;"><span class="label-grey">/ TELE</span><p class="contact-info-text">+84 977570473</p></div>
-                <div><span class="label-grey">/ SOCIALS</span><div class="social-links"><a href="#">INSTAGRAM</a> • <a href="#">FACEBOOK</a></div></div>
+                <span class="label-grey">/ CONTACT</span>
+                <p class="contact-info-text">LAMYENMEDIA@GMAIL.COM<br>TP.HCM, VIETNAM</p>
+                <div class="social-links"><a href="#">FACEBOOK</a><a href="#">INSTAGRAM</a></div>
             </div>
             <div class="contact-right">
-                <span class="label-grey">/ WAIT! YOU HAVE SOMETHING COOL TO SAY?</span>
                 <form class="contact-form">
-                    <div class="form-item"><label>NAME</label><input type="text"></div>
-                    <div class="form-item"><label>EMAIL</label><input type="email"></div>
-                    <div class="form-item full"><label>WHATCHU WANNA SAY?</label><textarea rows="4"></textarea></div>
-                    <button type="button" class="btn-submit">TELL US!</button>
+                    <div class="form-item"><label>NAME</label><input type="text" placeholder="YOUR NAME"></div>
+                    <div class="form-item"><label>MESSAGE</label><textarea rows="3" placeholder="SAY SOMETHING..."></textarea></div>
+                    <button type="button" class="btn-submit">SEND MESSAGE</button>
                 </form>
             </div>
         </div>
@@ -245,10 +195,7 @@
             const p = projects[index];
             const bgArea = document.getElementById('bg-area');
             const title = document.getElementById('p-title');
-            
             bgArea.style.backgroundColor = p.color;
-            document.body.style.color = (p.color === "#F5F5F0") ? "#000" : "#fff";
-
             title.classList.remove('fade');
             void title.offsetWidth; 
             title.innerText = (p.title === "WASTEFUL") ? p.title + " (SOON)" : p.title;
@@ -265,41 +212,34 @@
             const mainContainer = document.querySelector('.main-container');
             const target = document.getElementById(id);
             const isActive = target.classList.contains('active');
-
             menus.forEach(m => document.getElementById(m).classList.remove('active'));
-
             if (!isActive) {
                 target.classList.add('active');
                 mainContainer.style.transform = "scale(0.96)";
-                mainContainer.style.filter = (id === 'contact-menu') ? "none" : "blur(10px)";
-            } else {
-                closeAllOverlays();
-            }
+                mainContainer.style.filter = (id === 'contact-menu') ? "none" : "blur(15px)";
+            } else { closeAllOverlays(); }
         }
 
         function closeAllOverlays() {
-            ['talents-menu', 'about-menu', 'contact-menu', 'works-menu'].forEach(id => {
-                document.getElementById(id).classList.remove('active');
-            });
+            ['talents-menu', 'about-menu', 'contact-menu', 'works-menu'].forEach(id => document.getElementById(id).classList.remove('active'));
             const mainContainer = document.querySelector('.main-container');
             mainContainer.style.transform = "scale(1)";
             mainContainer.style.filter = "none";
         }
 
-        function updateTime() {
-            const timeDisplay = document.getElementById('current-time');
-            const now = new Date();
-            if(timeDisplay) timeDisplay.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
-        }
-        setInterval(updateTime, 1000); updateTime();
+        function goToProjectDetail() { window.location.href = `project.html?id=${currentIndex}`; }
 
-        function goToProjectDetail() { 
-            if (projects[currentIndex].title === "WASTEFUL") {
-                alert("This project is currently in post-production. Stay tuned!");
-            } else {
-                window.location.href = `project.html?id=${currentIndex}`; 
-            }
-        }
+        // --- TOUCH SWIPE FOR MOBILE ---
+        let touchstartX = 0;
+        let touchendX = 0;
+        const bgArea = document.getElementById('bg-area');
+
+        bgArea.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
+        bgArea.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            if (touchstartX - touchendX > 50) nextProject();
+            if (touchendX - touchstartX > 50) prevProject();
+        });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === "ArrowRight") nextProject();
