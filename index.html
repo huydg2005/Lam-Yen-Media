@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAMYENMEDIA | Portfolio</title>
+    <style>
+        /* --- 1. SETUP CHUNG --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            width: 100%; height: 100%;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #000; color: #fff; overflow: hidden;
+            transition: color 0.5s ease;
+        }
+
+        /* --- 2. HEADER & MENU --- */
+        .main-header {
+            position: absolute; top: 0; left: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 50px; z-index: 1000;
+        }
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .main-nav ul { display: flex; list-style: none; gap: 35px; }
+        .main-nav a { 
+            text-decoration: none; color: inherit; opacity: 0.6;
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; transition: 0.3s; 
+        }
+        .main-nav a:hover { opacity: 1; }
+
+        /* --- 3. CÁC LỚP PHỦ (OVERLAYS) --- */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: 2000; padding: 120px 50px 50px 50px;
+            display: flex; flex-direction: column;
+            background: rgba(0, 0, 0, 0.25) !important; 
+            backdrop-filter: blur(30px) saturate(160%);
+            -webkit-backdrop-filter: blur(30px) saturate(160%);
+            transform: translateY(-100%); 
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+        }
+
+        .overlay.is-contact {
+            background: #000 !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .overlay.active { transform: translateY(0); }
+
+        /* TABS MÀU TRẮNG */
+        .talents-tabs, .about-tabs, .works-tabs { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .tab { font-size: 0.7rem; color: #fff; text-transform: uppercase; border-bottom: 2px solid #fff; padding-bottom: 15px; display: inline-block; }
+
+        /* GLITCH COMING SOON - HIỆU ỨNG NGHỆ */
+        .coming-soon-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glitch-works {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 20px;
+            position: relative;
+            color: #fff;
+        }
+
+        .glitch-works::before, .glitch-works::after {
+            content: "COMING SOON";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        .glitch-works::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch-works::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim-2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            20% { clip: rect(62px, 9999px, 42px, 0); }
+            100% { clip: rect(10px, 9999px, 85px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            100% { clip: rect(15px, 9999px, 30px, 0); }
+        }
+
+        /* DIRECTOR GRID */
+        .director-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .director-item { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        .overlay.active .director-item { opacity: 1; transform: translateY(0); }
+        .image-box { width: 100%; height: 220px; background: rgba(255,255,255,0.05); transition: 0.5s ease; overflow: hidden; }
+        .image-box:hover { transform: scale(1.03); }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; }
+        .director-name { margin-top: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+        .about-text-container { max-width: 900px; margin: 0 auto; text-align: center; }
+        .about-text-container p { font-size: 1.4rem; line-height: 1.6; margin-bottom: 25px; font-weight: 300; color: rgba(255,255,255,0.9); }
+
+        /* CONTACT GRID */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .label-grey { color: rgba(255, 255, 255, 0.4); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px; }
+        .contact-info-text { font-size: 1.1rem; font-weight: 700; line-height: 1.5; text-transform: uppercase; margin-bottom: 40px; }
+        .social-links { display: flex; gap: 20px; font-weight: 700; font-size: 0.8rem; }
+        .social-links a { color: #fff; text-decoration: none; }
+        .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .form-item { border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; }
+        .form-item.full { grid-column: span 2; }
+        .form-item label { display: block; color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; margin-bottom: 10px; }
+        .form-item input, .form-item textarea { width: 100%; background: none; border: none; color: #fff; font-family: inherit; font-size: 1rem; outline: none; text-transform: uppercase; }
+        .btn-submit { grid-column: span 2; background: #1a1a1a; color: #fff; border: none; padding: 20px; font-weight: 700; text-transform: uppercase; cursor: pointer; margin-top: 20px; transition: 0.3s; border-radius: 4px; }
+        .btn-submit:hover { background: #fff; color: #000; }
+
+        .close-btn { position: absolute; bottom: 40px; right: 50px; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- 4. MAIN INTERFACE --- */
+        .main-container { transition: all 0.8s cubic-bezier(0.85, 0, 0.15, 1); width: 100%; height: 100vh; display: flex; flex-direction: column; }
+        #bg-area {
+            flex: 1; height: 100vh; display: flex; align-items: center; justify-content: space-between;
+            position: relative; transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+            background-image: linear-gradient(to right, rgba(0,0,0,0.2) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.2) 100%);
+        }
+        .nav-arrow { background: none; border: none; color: inherit; font-size: 2.5rem; padding: 40px; cursor: pointer; z-index: 100; opacity: 0.4; transition: 0.3s; }
+        .nav-arrow:hover { opacity: 1; transform: scale(1.2); }
+
+        .project-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 50px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
+        .project-title { font-size: clamp(3rem, 8vw, 9rem); font-weight: 800; line-height: 0.9; letter-spacing: -4px; text-transform: uppercase; }
+        .project-info { text-align: right; font-size: 0.9rem; line-height: 1.8; }
+        .info-value { font-weight: bold; margin-left: 5px; }
+
+        .fade { animation: fadeIn 0.6s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- OVERLAY: TALENTS -->
+    <div id="talents-menu" class="overlay">
+        <div class="talents-tabs"><span class="tab">DIRECTORS / TALENTS</span></div>
+        <div class="director-grid">
+            <div class="director-item"><div class="image-box"><img src="tu.jpeg"></div><p class="director-name">Nhat Tu</p></div>
+            <div class="director-item"><div class="image-box"><img src="huy.jpg"></div><p class="director-name">Duong Huy</p></div>
+            <div class="director-item"><div class="image-box"><img src="phuc.jpeg"></div><p class="director-name">Hoang Phuc</p></div>
+            <div class="director-item"><div class="image-box"><img src="tri.jpeg"></div><p class="director-name">Tri Minh</p></div>
+        </div>
+        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
+    </div>
+
+    <!-- OVERLAY: ABOUT US -->
+    <div id="about-menu" class="overlay">
+        <div class="about-tabs"><span class="tab">ABOUT US</span></div>
+        <div class="about-text-container">
+            <p>Chúng tôi biến những ý tưởng sơ khai trên trang giấy thành những sản phẩm hình ảnh có sức lan tỏa.</p>
+        </div>
+        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
+    </div>
+
+    <!-- OVERLAY: WORKS (COMING SOON) -->
+    <div id="works-menu" class="overlay">
+        <div class="works-tabs"><span class="tab">OUR WORKS</span></div>
+        <div class="coming-soon-wrapper">
+            <h2 class="glitch-works">COMING SOON</h2>
+        </div>
+        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
+    </div>
+
+    <!-- OVERLAY: CONTACT -->
+    <div id="contact-menu" class="overlay is-contact">
+        <div class="contact-grid">
+            <div class="contact-left">
+                <div style="margin-bottom: 50px;"><span class="label-grey">/ MAIL TO</span><p class="contact-info-text">LAMYENMEDIA.VN<br>LAMYENMEDIA@GMAIL.COM</p></div>
+                <div style="margin-bottom: 50px;"><span class="label-grey">/ LOCATION</span><p class="contact-info-text">TPHCM VIETNAM</p><p id="current-time" style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px;"></p></div>
+                <div style="margin-bottom: 50px;"><span class="label-grey">/ TELE</span><p class="contact-info-text">+84 977570473</p></div>
+                <div><span class="label-grey">/ SOCIALS</span><div class="social-links"><a href="#">INSTAGRAM</a> • <a href="#">FACEBOOK</a></div></div>
+            </div>
+            <div class="contact-right">
+                <span class="label-grey">/ WAIT! YOU HAVE SOMETHING COOL TO SAY?</span>
+                <form class="contact-form">
+                    <div class="form-item"><label>NAME</label><input type="text"></div>
+                    <div class="form-item"><label>EMAIL</label><input type="email"></div>
+                    <div class="form-item full"><label>WHATCHU WANNA SAY?</label><textarea rows="4"></textarea></div>
+                    <button type="button" class="btn-submit">TELL US!</button>
+                </form>
+            </div>
+        </div>
+        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
+    </div>
+
+    <div class="main-container">
+        <header class="main-header">
+            <div class="logo">LAMYENMEDIA</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')">/ TALENTS</a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('about-menu')">/ ABOUT US</a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('works-menu')">/ WORKS</a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('contact-menu')">/ CONTACT</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="bg-area" onclick="goToProjectDetail()">
+            <button class="nav-arrow" onclick="event.stopPropagation(); prevProject()">&#10094;</button>
+            <button class="nav-arrow" onclick="event.stopPropagation(); nextProject()">&#10095;</button>
+        </main>
+
+        <footer class="project-footer">
+            <div class="project-title" id="p-title">PROJECT</div>
+            <div class="project-info">
+                <p>Director <span class="info-value" id="p-director">---</span></p>
+                <p>Client <span class="info-value" id="p-client">---</span></p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const projects = [
+            { title: "ENDLESS", director: "NHAT TU", client: "UEF", color: "#8B0000" }, 
+            { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },   
+            { title: "LOCKNLOCK", director: "HUY DUONG", client: "LOCKNLOCK VN", color: "#D4AF37" }, 
+            { title: "PRODUCT PHOTOGRAPHY", director: "D.G. HUY", client: "UEF", color: "#2D5A27" },     
+            { title: "WASTEFUL", director: "MEDIA TEAM", client: "TRAVEL", color: "#111" }  
+        ];
+
+        let currentIndex = 0;
+
+        function updateProject(index) {
+            const p = projects[index];
+            const bgArea = document.getElementById('bg-area');
+            const title = document.getElementById('p-title');
+            
+            bgArea.style.backgroundColor = p.color;
+            document.body.style.color = (p.color === "#F5F5F0") ? "#000" : "#fff";
+
+            title.classList.remove('fade');
+            void title.offsetWidth; 
+            title.innerText = (p.title === "WASTEFUL") ? p.title + " (SOON)" : p.title;
+            document.getElementById('p-director').innerText = p.director;
+            document.getElementById('p-client').innerText = p.client;
+            title.classList.add('fade');
+        }
+
+        function nextProject() { currentIndex = (currentIndex + 1) % projects.length; updateProject(currentIndex); }
+        function prevProject() { currentIndex = (currentIndex - 1 + projects.length) % projects.length; updateProject(currentIndex); }
+        
+        function toggleOverlay(id) {
+            const menus = ['talents-menu', 'about-menu', 'contact-menu', 'works-menu'];
+            const mainContainer = document.querySelector('.main-container');
+            const target = document.getElementById(id);
+            const isActive = target.classList.contains('active');
+
+            menus.forEach(m => document.getElementById(m).classList.remove('active'));
+
+            if (!isActive) {
+                target.classList.add('active');
+                mainContainer.style.transform = "scale(0.96)";
+                mainContainer.style.filter = (id === 'contact-menu') ? "none" : "blur(10px)";
+            } else {
+                closeAllOverlays();
+            }
+        }
+
+        function closeAllOverlays() {
+            ['talents-menu', 'about-menu', 'contact-menu', 'works-menu'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            const mainContainer = document.querySelector('.main-container');
+            mainContainer.style.transform = "scale(1)";
+            mainContainer.style.filter = "none";
+        }
+
+        function updateTime() {
+            const timeDisplay = document.getElementById('current-time');
+            const now = new Date();
+            if(timeDisplay) timeDisplay.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
+        }
+        setInterval(updateTime, 1000); updateTime();
+
+        function goToProjectDetail() { 
+            if (projects[currentIndex].title === "WASTEFUL") {
+                alert("This project is currently in post-production. Stay tuned!");
+            } else {
+                window.location.href = `project.html?id=${currentIndex}`; 
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight") nextProject();
+            if (e.key === "ArrowLeft") prevProject();
+            if (e.key === "Escape") closeAllOverlays();
+        });
+
+        updateProject(0);
+    </script>
+</body>
+</html>
