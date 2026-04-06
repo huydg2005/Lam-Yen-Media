@@ -1,226 +1,165 @@
-/* --- 1. RESET & SETUP --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* --- 1. SETUP CHUNG --- */
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
 }
 
 body, html {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    /* Cho phép cuộn dọc để xem 23 ảnh, ẩn cuộn ngang */
-    overflow-x: hidden; 
-    transition: color 0.5s ease;
+    background-color: #000; color: #fff;
+    overflow-x: hidden;
 }
 
-/* --- 2. CONTAINER CHÍNH --- */
-.main-container {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1), filter 0.8s ease;
-}
-
-/* --- 3. HEADER & MENU --- */
+/* --- 2. HEADER --- */
 .main-header {
-    position: fixed; /* Đổi thành fixed để menu luôn đi theo khi cuộn 23 ảnh */
-    top: 0; left: 0; width: 100%;
+    position: fixed; top: 0; left: 0; width: 100%;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 40px 50px;
-    z-index: 1000;
+    padding: 40px 50px; z-index: 2000;
 }
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: 900;
-    letter-spacing: -1px;
-    text-transform: uppercase;
-}
-
-.main-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 35px;
-}
-
-.main-nav a { 
-    text-decoration: none; 
-    color: inherit; 
-    opacity: 0.6;
-    font-size: 0.75rem; 
-    font-weight: 600; 
-    letter-spacing: 1px; 
-    transition: 0.3s; 
-}
-
-.main-nav a:hover { opacity: 1; }
 
 .back-btn { 
-    position: fixed; 
-    top: 40px; left: 40px; 
-    z-index: 1001; 
-    color: #fff; 
-    text-decoration: none; 
-    font-size: 0.8rem; 
-    font-weight: bold; 
-    letter-spacing: 1px; 
+    color: #fff; text-decoration: none; font-size: 0.75rem; 
+    font-weight: 700; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; 
 }
+.back-btn:hover { opacity: 1; }
 
-/* --- 4. HERO SECTION (ẢNH NỀN CHÍNH) --- */
+/* --- 3. HERO SECTION --- */
 .hero { 
-    position: relative; 
-    width: 100%; 
-    height: 100vh; 
-    display: flex; 
-    align-items: flex-end; 
-    padding: 50px; 
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
+    position: relative; width: 100%; height: 100vh; 
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 60px 10%; overflow: hidden;
+    background-color: #000; background-size: cover; background-position: center;
 }
 
 .hero::before { 
-    content: ''; 
-    position: absolute; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%; 
-    background: rgba(0, 0, 0, 0.3); 
-    z-index: 1; 
+    content: ''; position: absolute; top: 0; left: 0; 
+    width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); z-index: 1; 
 }
 
 #bg-video { 
-    position: absolute; 
-    top: 50%; left: 50%; 
-    min-width: 100%; min-height: 100%; 
-    transform: translate(-50%, -50%); 
-    object-fit: cover; 
-    z-index: 0; 
-    display: none; 
+    position: absolute; top: 50%; left: 50%; 
+    min-width: 100%; min-height: 100%; transform: translate(-50%, -50%); 
+    object-fit: cover; z-index: 0; display: none; 
 }
 
 .project-name { 
-    position: relative; 
-    z-index: 2; 
-    font-size: 10vw; 
-    font-weight: 900; 
-    letter-spacing: -5px; 
-    text-transform: uppercase; 
-    line-height: 0.8; 
+    position: relative; z-index: 10; 
+    font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; 
+    letter-spacing: -5px; text-transform: uppercase; line-height: 0.8; 
 }
 
-/* --- 5. BỐ CỤC 23 ẢNH ĐAN XEN (DÀNH RIÊNG CHO PRODUCT) --- */
-
-/* Thiết lập nền mờ cố định phía sau */
-#view-product {
-    position: relative;
-    padding: 100px 0;
-    background-image: url('anh1.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed; /* Giữ nền đứng im khi cuộn */
-    display: none; /* Sẽ hiện ra bằng JS */
+.project-info-right {
+    position: relative; z-index: 10; text-align: right;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 20px;
 }
 
-/* Lớp phủ làm mờ nền anh1.jpg */
-#view-product::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.75); 
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: 0;
+.info-row { display: flex; gap: 40px; }
+.info-item span { display: block; font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
+.info-item p { font-size: 0.9rem; font-weight: 600; }
+
+.credit-btn {
+    padding: 10px 25px; border: 1px solid rgba(255,255,255,0.3);
+    background: transparent; color: #fff; cursor: pointer;
+    font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
+    font-size: 0.75rem; transition: 0.4s;
+}
+.credit-btn:hover { background: #fff; color: #000; border-color: #fff; }
+
+.blur-bridge {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 30vh;
+    z-index: 5; background: linear-gradient(to bottom, transparent, #000);
+    pointer-events: none;
 }
 
-/* Các hàng ảnh đan xen */
+/* --- 4. TAB TRƯỢT (VIEW PRODUCT) --- */
+#view-product { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    z-index: 3000; background: rgba(0, 0, 0, 0.75); 
+    backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+    transform: translateY(100%); 
+    transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+    overflow-y: auto;
+}
+#view-product.active { transform: translateY(0); }
+
+/* Nút Close mặc định cho PC */
+.close-btn { 
+    position: absolute; bottom: 30px; right: 30px; 
+    cursor: pointer; font-size: 0.75rem; text-transform: uppercase; 
+    letter-spacing: 2px; font-weight: 900; z-index: 5000; transition: 0.3s;
+}
+.close-btn:hover { color: #fff; }
+
+/* --- 5. NỘI DUNG TRONG TAB --- */
+.product-content { padding-top: 50px; }
 .row { 
-    position: relative;
-    z-index: 1;
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 250px; 
-    gap: 80px; 
-    padding: 0 10%;
-    opacity: 0; 
-    transform: translateY(100px);
+    display: flex; align-items: center; justify-content: center; 
+    margin-bottom: 250px; gap: 80px; padding: 0 10%;
+    opacity: 0; transform: translateY(100px);
     transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 .row:nth-child(even) { flex-direction: row-reverse; }
-
-.img-box { 
-    flex: 1.2; 
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8); 
-    background: #111;
-}
-
-/* ĐÃ SỬA: HIỆN MÀU RỰC RỠ */
-.img-box img { 
-    width: 100%; 
-    height: auto; 
-    display: block; 
-    filter: grayscale(0%) !important; /* Đảm bảo 100% có màu */
-    -webkit-filter: grayscale(0%) !important;
-    transition: 0.8s ease;
-}
-
-.img-box img:hover { 
-    transform: scale(1.03); 
-    filter: brightness(1.1) !important; 
-}
-
+.img-box { flex: 1.2; box-shadow: 0 30px 60px rgba(0,0,0,0.8); background: #111; overflow: hidden; }
+.img-box img { width: 100%; height: auto; display: block; }
 .text-box { flex: 0.8; }
-.text-box h2 { 
-    font-size: 2.5rem; 
-    margin-bottom: 20px; 
-    text-transform: uppercase; 
-    letter-spacing: 4px;
-    font-weight: 800;
-}
+.text-box h2 { font-size: 2.5rem; margin-bottom: 20px; text-transform: uppercase; font-weight: 800; }
+.text-box p { font-size: 1.1rem; color: #ccc; line-height: 1.8; font-style: italic; }
 
-.text-box p { 
-    font-size: 1.1rem; 
-    color: #ccc; 
-    line-height: 1.8; 
-    font-weight: 300; 
-}
+.reveal { opacity: 1 !important; transform: translateY(0) !important; }
 
-/* Hiệu ứng hiện ra khi cuộn */
-.reveal { 
-    opacity: 1 !important; 
-    transform: translateY(0) !important; 
-}
+footer { padding: 100px 50px; text-align: center; font-size: 0.7rem; color: #444; }
 
-/* --- 6. LAYOUT VIDEO STANDARD --- */
-.layout-video { 
-    padding: 100px 50px; 
-    display: none; 
-    justify-content: space-between; 
-    gap: 50px; 
-}
+/* --- 6. MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+    .main-header { padding: 30px 20px; }
+    
+    .hero {
+        flex-direction: column; align-items: flex-start;
+        justify-content: flex-end; padding: 40px 25px;
+    }
 
-.desc { flex: 2; font-size: 1.5rem; color: #aaa; max-width: 800px; line-height: 1.6; }
+    .project-name { font-size: 3.5rem; max-width: 100%; margin-bottom: 20px; letter-spacing: -2px; }
 
-/* --- 7. FOOTER --- */
-footer { 
-    position: relative; 
-    z-index: 2; 
-    padding: 80px 50px; 
-    text-align: center; 
-    font-size: 0.7rem; 
-    color: #555; 
-    background: #000; 
-}
+    .project-info-right {
+        align-items: flex-start; text-align: left; width: 100%;
+    }
+    .info-row { gap: 30px; margin-bottom: 20px; }
 
-.fade { animation: fadeIn 0.6s ease forwards; }
+    /* --- ÉP NÚT CLOSE LÊN TRÊN CHO MOBILE (XÓA SẠCH VÙNG XÁM) --- */
+    @media (max-width: 768px) {
+        .close-btn { 
+            position: fixed !important; 
+            top: 100x !important;       /* Đã hạ thấp xuống một chút theo ý Huy */
+            right: 25px !important; 
+            bottom: auto !important;
+            left: auto !important;
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+            /* XÓA BỎ HOÀN TOÀN VÙNG XÁM VÀ BO TRÒN */
+            background: transparent !important; /* Chuyển sang trong suốt hoàn toàn */
+            background-color: transparent !important;
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important;
+            box-shadow: none !important;        /* Xóa bóng mờ nếu có */
+            border: none !important;            /* Xóa viền */
+            border-radius: 0 !important;        /* Xóa bo tròn */
+            
+            /* TINH CHỈNH CHỮ CLOSE */
+            padding: 0 !important; 
+            color: #fff !important;
+            opacity: 0.8 !important;
+            font-weight: 800 !important;
+            font-size: 0.75rem !important;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 999999 !important;
+            display: block !important;
+        }
+
+        .close-btn:hover {
+            opacity: 1 !important;
+            background: transparent !important;
+        }
+
+    }
 }

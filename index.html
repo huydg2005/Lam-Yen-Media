@@ -28,10 +28,12 @@
         }
         .main-nav a:hover { opacity: 1; }
 
+        .menu-toggle { display: none; cursor: pointer; font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; opacity: 0.8; }
+
         /* --- 3. CÁC LỚP PHỦ (OVERLAYS) --- */
         .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            z-index: 2000; padding: 120px 50px 50px 50px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 60vh;
+            z-index: 2000; padding: 50px;
             display: flex; flex-direction: column;
             background: rgba(0, 0, 0, 0.25) !important; 
             backdrop-filter: blur(30px) saturate(160%);
@@ -42,45 +44,47 @@
             overflow-y: auto;
         }
         .overlay.active { transform: translateY(0); }
-        .overlay.is-contact { background: #000 !important; backdrop-filter: none !important; }
+        .overlay.is-contact { height: 100vh; background: #000 !important; backdrop-filter: none !important; border-bottom: none; }
 
         .talents-tabs, .about-tabs, .works-tabs { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .tab { font-size: 0.7rem; color: #fff; text-transform: uppercase; border-bottom: 2px solid #fff; padding-bottom: 15px; display: inline-block; }
 
-        /* GLITCH COMING SOON */
-        .coming-soon-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; }
-        .glitch-works { font-size: clamp(2.5rem, 8vw, 8rem); font-weight: 900; text-transform: uppercase; letter-spacing: 15px; position: relative; color: #fff; text-align: center; }
-        .glitch-works::before, .glitch-works::after { content: "COMING SOON"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .glitch-works::before { left: 2px; text-shadow: -2px 0 #ff00c1; clip: rect(44px, 999px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
-        .glitch-works::after { left: -2px; text-shadow: -2px 0 #00fff9; clip: rect(44px, 999px, 56px, 0); animation: glitch-anim-2 5s infinite linear alternate-reverse; }
-        @keyframes glitch-anim { 0% { clip: rect(31px, 9999px, 94px, 0); } 100% { clip: rect(10px, 9999px, 85px, 0); } }
-        @keyframes glitch-anim-2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 100% { clip: rect(15px, 9999px, 30px, 0); } }
+        /* Nút Close mặc định (PC) */
+        .close-btn { 
+            position: absolute; top: 30px; right: 30px; 
+            background: none; border: none; color: rgba(255,255,255,0.4); 
+            cursor: pointer; font-size: 0.7rem; text-transform: uppercase; 
+            letter-spacing: 2px; z-index: 5000; transition: 0.3s;
+        }
+        .close-btn:hover { color: #fff; }
 
-        /* TALENTS GRID */
+        /* --- 4. CONTACT SECTION --- */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 100px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .contact-section { margin-bottom: 60px; }
+        .label-grey { color: rgba(255, 255, 255, 0.4); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px; }
+        .contact-info-text { font-size: 1.1rem; font-weight: 700; line-height: 1.5; text-transform: uppercase; margin-bottom: 10px; }
+        .time-text { color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; margin-top: 10px; }
+        
+        .social-links { display: flex; gap: 15px; font-weight: 700; font-size: 0.8rem; }
+        .social-links a { color: #fff; text-decoration: none; opacity: 0.5; transition: 0.3s; }
+        .social-links a:hover { opacity: 1; transform: translateY(-2px); }
+        
+        .anti-form { display: grid; gap: 40px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .form-item { border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; }
+        .form-item label { display: block; color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; margin-bottom: 15px; }
+        .form-item input, .form-item textarea { width: 100%; background: none; border: none; color: #fff; font-family: inherit; font-size: 1rem; outline: none; text-transform: uppercase; }
+        .btn-tell-us { background: #1a1a1a; color: #fff; border: none; padding: 20px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.3s; border-radius: 4px; width: 100%; }
+        .btn-tell-us:hover { background: #fff; color: #000; }
+
+        /* --- 5. LAYOUT --- */
         .director-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
         .director-item { opacity: 0; transform: translateY(30px); transition: 0.7s ease; }
         .overlay.active .director-item { opacity: 1; transform: translateY(0); }
         .image-box { width: 100%; aspect-ratio: 16/9; background: rgba(255,255,255,0.05); overflow: hidden; }
         .image-box img { width: 100%; height: 100%; object-fit: cover; }
         .director-name { margin-top: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: bold; }
-
-        /* ABOUT US */
-        .about-text-container { max-width: 800px; margin: 0 auto; text-align: center; }
-        .about-text-container p { font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.6; margin-bottom: 25px; font-weight: 300; color: rgba(255,255,255,0.9); }
-
-        /* CONTACT */
-        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px; max-width: 1200px; margin: 0 auto; }
-        .label-grey { color: rgba(255,255,255,0.4); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .contact-info-text { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; }
-        .social-links a { color: #fff; text-decoration: none; font-weight: 700; font-size: 0.8rem; margin-right: 15px; }
-        .form-item { border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 30px; }
-        .form-item label { display: block; color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-bottom: 5px; }
-        .form-item input, .form-item textarea { width: 100%; background: none; border: none; color: #fff; outline: none; font-size: 1rem; text-transform: uppercase; }
-        .btn-submit { background: #fff; color: #000; border: none; padding: 15px; width: 100%; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-
-        .close-btn { position: absolute; bottom: 30px; right: 30px; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* --- 4. MAIN INTERFACE --- */
+        
         .main-container { transition: all 0.8s cubic-bezier(0.85, 0, 0.15, 1); width: 100%; height: 100vh; display: flex; flex-direction: column; }
         #bg-area { flex: 1; height: 100vh; display: flex; align-items: center; justify-content: space-between; position: relative; transition: background-color 0.8s ease; cursor: pointer; }
         .nav-arrow { background: none; border: none; color: inherit; font-size: 2rem; padding: 30px; cursor: pointer; z-index: 100; opacity: 0.3; }
@@ -90,15 +94,33 @@
         .project-info { text-align: right; font-size: 0.8rem; line-height: 1.6; }
         .info-value { font-weight: bold; margin-left: 5px; }
 
-        /* --- 5. RESPONSIVE --- */
+        /* --- 6. TỐI ƯU MOBILE (768PX) --- */
         @media (max-width: 768px) {
-            .main-header { padding: 25px; }
+            .main-header { padding: 30px 25px; }
             .logo { font-size: 1.3rem; }
-            .main-nav { display: none; } /* Ẩn menu chính trên đt để tối giản */
-            .project-footer { flex-direction: column; align-items: flex-start; padding: 25px; }
-            .project-title { font-size: 4rem; letter-spacing: -2px; }
-            .project-info { text-align: left; margin-top: 15px; }
-            .nav-arrow { display: none; } /* Dùng swipe thay thế */
+            .main-nav { display: none; } 
+            .menu-toggle { display: block; } 
+            .nav-arrow { display: none; }
+
+            /* NÚT CLOSE CHO MOBILE - ÉP BUỘC LÊN TRÊN PHẢI */
+            .close-btn { 
+                position: fixed !important; top: 20px !important; right: 20px !important; 
+                bottom: auto !important; background: rgba(255,255,255,0.2) !important;
+                padding: 10px 20px !important; border-radius: 30px !important;
+                color: #fff !important; font-weight: 800 !important;
+                backdrop-filter: blur(10px); z-index: 9999 !important;
+            }
+
+            .project-footer { padding: 30px 25px; flex-direction: column; align-items: flex-start; bottom: 30px; }
+            .project-title { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 10px; }
+            .overlay { padding: 60px 25px 40px 25px; height: 90vh; }
+            .overlay.is-contact { height: 100vh; padding-top: 80px; }
+            .director-grid { grid-template-columns: 1fr; gap: 40px; padding-bottom: 60px; }
+            .image-box { aspect-ratio: 4/5; }
+            .contact-grid { grid-template-columns: 1fr; gap: 50px; }
+            .contact-right { order: 1; }
+            .contact-left { order: 2; padding-bottom: 80px; }
+            .form-row { grid-template-columns: 1fr; gap: 30px; }
         }
 
         .fade { animation: fadeIn 0.6s ease forwards; }
@@ -109,53 +131,85 @@
 
     <!-- OVERLAYS -->
     <div id="talents-menu" class="overlay">
+        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
         <div class="talents-tabs"><span class="tab">DIRECTORS / TALENTS</span></div>
         <div class="director-grid">
             <div class="director-item"><div class="image-box"><img src="img/tu.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TU'"></div><p class="director-name">Nhat Tu</p></div>
             <div class="director-item"><div class="image-box"><img src="img/huy.jpg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=HUY'"></div><p class="director-name">Duong Huy</p></div>
-            <div class="director-item"><div class="image-box"><img src="img/phuc.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=PHUC'"></div><p class="director-name">Hoang Phuc</p></div>
             <div class="director-item"><div class="image-box"><img src="img/tri.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TRI'"></div><p class="director-name">Tri Minh</p></div>
         </div>
-        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
+    </div>
+
+    <div id="mobile-nav-menu" class="overlay">
+        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
+        <div class="works-tabs"><span class="tab">MENU</span></div>
+        <div style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px;">
+            <a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ TALENTS</a>
+            <a href="javascript:void(0)" onclick="toggleOverlay('about-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ ABOUT US</a>
+            <a href="javascript:void(0)" onclick="toggleOverlay('works-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ WORKS</a>
+            <a href="javascript:void(0)" onclick="toggleOverlay('contact-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ CONTACT</a>
+        </div>
     </div>
 
     <div id="about-menu" class="overlay">
+        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
         <div class="about-tabs"><span class="tab">ABOUT US</span></div>
-        <div class="about-text-container">
-            <p>Chúng tôi là một nhóm gồm <strong>4 sinh viên</strong> Công nghệ thông tin và Truyền thông, gặp nhau tại điểm giao thoa giữa tư duy kỹ thuật logic và tâm hồn nghệ thuật bay bổng.</p>
-            <p>Khởi đầu từ những bài tập nhóm và những thước phim quay vội, chúng tôi đã cùng nhau biến những ý tưởng sơ khai thành những sản phẩm hình ảnh có sức lan tỏa.</p>
-            <p>Với <strong>LAMYENMEDIA</strong>, mỗi dự án là một hành trình kể chuyện bằng ánh sáng, âm thanh và cảm xúc của cả 4 thành viên.</p>
+        <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 25px;">Chúng tôi là điểm giao thoa giữa tư duy kỹ thuật logic và tâm hồn nghệ thuật bay bổng.</p>
+            <p style="font-size: 1.1rem; opacity: 0.8;">Với <strong>LAMYENMEDIA</strong>, mỗi dự án là một hành trình kể chuyện bằng ánh sáng và cảm xúc.</p>
         </div>
-        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
     </div>
 
     <div id="works-menu" class="overlay">
+        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
         <div class="works-tabs"><span class="tab">OUR WORKS</span></div>
-        <div class="coming-soon-wrapper"><h2 class="glitch-works">COMING SOON</h2></div>
-        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
+        <div style="text-align: center; margin-top: 50px;"><h2 style="letter-spacing: 10px; opacity: 0.3;">COMING SOON</h2></div>
     </div>
 
     <div id="contact-menu" class="overlay is-contact">
+        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
         <div class="contact-grid">
             <div class="contact-left">
-                <span class="label-grey">/ CONTACT</span>
-                <p class="contact-info-text">LAMYENMEDIA@GMAIL.COM<br>TP.HCM, VIETNAM</p>
-                <div class="social-links"><a href="#">FACEBOOK</a><a href="#">INSTAGRAM</a></div>
+                <div class="contact-section">
+                    <span class="label-grey">/ MAIL TO</span>
+                    <p class="contact-info-text">LAMYENMEDIA@GMAIL.COM</p>
+                </div>
+                <div class="contact-section">
+                    <span class="label-grey">/ LOCATION</span>
+                    <p class="contact-info-text">TP. HO CHI MINH, VIETNAM</p>
+                    <p id="live-time" class="time-text"></p>
+                </div>
+                <div class="contact-section">
+                    <span class="label-grey">/ TELE</span>
+                    <p class="contact-info-text">+84 96 384 0316</p>
+                </div>
+                <div class="contact-section">
+                    <span class="label-grey">/ SOCIALS</span>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/_tuuxuf.raw/" target="_blank">INSTAGRAM</a> • 
+                        <a href="https://www.facebook.com/nhat.tu.415301" target="_blank">FACEBOOK</a> • 
+                        <a href="https://www.threads.net/@_tuuxuf.raw" target="_blank">THREADS</a>
+                    </div>
+                </div>
             </div>
             <div class="contact-right">
-                <form class="contact-form">
-                    <div class="form-item"><label>NAME</label><input type="text" placeholder="YOUR NAME"></div>
-                    <div class="form-item"><label>MESSAGE</label><textarea rows="3" placeholder="SAY SOMETHING..."></textarea></div>
-                    <button type="button" class="btn-submit">SEND MESSAGE</button>
+                <span class="label-grey">/ SAY SOMETHING COOL</span>
+                <form class="anti-form">
+                    <div class="form-row">
+                        <div class="form-item"><label>NAME</label><input type="text" id="contact-name"></div>
+                        <div class="form-item"><label>EMAIL</label><input type="email" id="contact-email"></div>
+                    </div>
+                    <div class="form-item"><label>MESSAGE</label><textarea rows="3" id="contact-msg"></textarea></div>
+                    <button type="button" class="btn-tell-us" onclick="handleSendMail()">TELL US!</button>
                 </form>
             </div>
         </div>
-        <button class="close-btn" onclick="closeAllOverlays()">✕ Close</button>
     </div>
 
     <div class="main-container">
         <header class="main-header">
             <div class="logo">LAMYENMEDIA</div>
+            <div class="menu-toggle" onclick="toggleOverlay('mobile-nav-menu')">MENU</div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')">/ TALENTS</a></li>
@@ -166,7 +220,7 @@
             </nav>
         </header>
 
-        <main id="bg-area" onclick="goToProjectDetail()">
+        <main id="bg-area" onclick="handleBgClick(event)">
             <button class="nav-arrow" onclick="event.stopPropagation(); prevProject()">&#10094;</button>
             <button class="nav-arrow" onclick="event.stopPropagation(); nextProject()">&#10095;</button>
         </main>
@@ -182,14 +236,15 @@
 
     <script>
         const projects = [
-            { title: "ENDLESS", director: "NHAT TU", client: "UEF", color: "#8B0000" }, 
+            { title: "ENDLESS", director: "NHAT TU", client: "THEFIRSTTAKE", color: "#8B0000" }, 
             { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },   
-            { title: "LOCKNLOCK", director: "HUY DUONG", client: "LOCKNLOCK VN", color: "#D4AF37" }, 
-            { title: "PRODUCT PHOTOGRAPHY", director: "D.G. HUY", client: "UEF", color: "#2D5A27" },     
-            { title: "WASTEFUL", director: "MEDIA TEAM", client: "TRAVEL", color: "#111" }  
+            { title: "LOCKNLOCK", director: "NHAT TU", client: "LOCKNLOCK VN", color: "#D4AF37" }, 
+            { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF", color: "#2D5A27" },     
+            { title: "WASTEFUL", director: "MEDIA TEAM", client: "UEF", color: "#111" }  
         ];
 
         let currentIndex = 0;
+        let isSwiping = false;
 
         function updateProject(index) {
             const p = projects[index];
@@ -208,11 +263,13 @@
         function prevProject() { currentIndex = (currentIndex - 1 + projects.length) % projects.length; updateProject(currentIndex); }
         
         function toggleOverlay(id) {
-            const menus = ['talents-menu', 'about-menu', 'contact-menu', 'works-menu'];
+            const menus = ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'];
             const mainContainer = document.querySelector('.main-container');
             const target = document.getElementById(id);
             const isActive = target.classList.contains('active');
+            
             menus.forEach(m => document.getElementById(m).classList.remove('active'));
+            
             if (!isActive) {
                 target.classList.add('active');
                 mainContainer.style.transform = "scale(0.96)";
@@ -221,24 +278,46 @@
         }
 
         function closeAllOverlays() {
-            ['talents-menu', 'about-menu', 'contact-menu', 'works-menu'].forEach(id => document.getElementById(id).classList.remove('active'));
+            ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'].forEach(id => document.getElementById(id).classList.remove('active'));
             const mainContainer = document.querySelector('.main-container');
             mainContainer.style.transform = "scale(1)";
             mainContainer.style.filter = "none";
         }
 
-        function goToProjectDetail() { window.location.href = `project.html?id=${currentIndex}`; }
+        function handleBgClick(e) {
+            if (isSwiping) return;
+            if (e.target.id === 'bg-area' || e.target.id === 'p-title') {
+                window.location.href = `project.html?id=${currentIndex}`;
+            }
+        }
 
-        // --- TOUCH SWIPE FOR MOBILE ---
+        function handleSendMail() {
+            const name = document.getElementById('contact-name').value;
+            const message = document.getElementById('contact-msg').value;
+            const email = "youngduonghuy@gmail.com";
+            if (!message) { alert("Please write something before sending!"); return; }
+            const subject = encodeURIComponent(`[Contact Portfolio] from ${name || 'Guest'}`);
+            const body = encodeURIComponent(`Name: ${name}\nMessage: ${message}`);
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        }
+
+        function updateLiveTime() {
+            const timeElement = document.getElementById('live-time');
+            if (!timeElement) return;
+            const now = new Date();
+            timeElement.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
+        }
+        setInterval(updateLiveTime, 1000);
+
         let touchstartX = 0;
-        let touchendX = 0;
-        const bgArea = document.getElementById('bg-area');
-
-        bgArea.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
-        bgArea.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            if (touchstartX - touchendX > 50) nextProject();
-            if (touchendX - touchstartX > 50) prevProject();
+        document.getElementById('bg-area').addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; isSwiping = false; });
+        document.getElementById('bg-area').addEventListener('touchend', e => {
+            let touchendX = e.changedTouches[0].screenX;
+            if (Math.abs(touchstartX - touchendX) > 50) {
+                isSwiping = true;
+                if (touchstartX - touchendX > 50) nextProject();
+                else prevProject();
+            }
         });
 
         document.addEventListener('keydown', (e) => {
@@ -248,6 +327,7 @@
         });
 
         updateProject(0);
+        updateLiveTime();
     </script>
 </body>
 </html>

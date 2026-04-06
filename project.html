@@ -2,19 +2,18 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title id="page-title">Project Detail | LAMYENMEDIA</title>
     <style>
         /* --- 1. RESET & SETUP --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html {
             width: 100%; height: 100%;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #000; color: #fff; overflow-x: hidden;
-            transition: color 0.5s ease;
         }
 
-        /* --- 2. HEADER & MENU --- */
+        /* --- 2. HEADER --- */
         .main-header {
             position: fixed; top: 0; left: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: center;
@@ -29,47 +28,81 @@
         /* --- 3. HERO SECTION --- */
         .hero { 
             position: relative; width: 100%; height: 100vh; 
-            display: flex; align-items: flex-end; padding: 50px; 
-            overflow: hidden; background-size: cover; background-position: center;
+            display: flex; align-items: flex-end; justify-content: space-between;
+            padding: 60px 50px; overflow: hidden;
+            /* Thêm các dòng bên dưới để hỗ trợ ảnh nền */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
-        .hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1; }
+        /* Lớp phủ tối nhẹ để nổi bật chữ */
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); z-index: 1;
+        }
+
         #bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; transform: translate(-50%, -50%); object-fit: cover; z-index: 0; display: none; }
-        .project-name { position: relative; z-index: 2; font-size: 10vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; line-height: 0.8; }
-
-        /* --- 4. VIDEO NỀN CỐ ĐỊNH (CHO MIXED TYPE) --- */
-        .fixed-video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; display: none; }
-        #fixed-video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
-        .fixed-video-blur { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); background: rgba(0, 0, 0, 0.5); display: none; }
-
-        /* --- 5. LAYOUT ẢNH ĐAN XEN --- */
-        #view-product { display: none; position: relative; padding: 100px 0; background-size: cover; background-position: center; background-attachment: fixed; }
-        .photo-mode-bg::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 0; }
-
-        .row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 250px; gap: 80px; padding: 0 10%; opacity: 0; transform: translateY(100px); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
-        .row:nth-child(even) { flex-direction: row-reverse; }
-        .img-box { flex: 1.2; box-shadow: 0 30px 60px rgba(0,0,0,0.8); background: #111; overflow: hidden; }
-        .img-box img { width: 100%; height: auto; display: block; filter: grayscale(0%) !important; transition: 0.8s ease; }
-        .img-box img:hover { transform: scale(1.05); }
         
+        .project-name { 
+            position: relative; z-index: 10; 
+            font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; 
+            letter-spacing: -5px; text-transform: uppercase; line-height: 0.8;
+            max-width: 60%;
+        }
+
+        .project-info-right {
+            position: relative; z-index: 10;
+            text-align: right;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 25px;
+            padding-bottom: 15px;
+        }
+        .info-row { display: flex; gap: 40px; }
+        .info-item span { display: block; font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; }
+        .info-item p { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.5px; }
+
+        .credit-btn {
+            padding: 10px 25px; border: 1px solid rgba(255,255,255,0.3);
+            background: transparent; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 2px; font-size: 0.75rem; transition: all 0.4s ease;
+        }
+        .credit-btn:hover { background: #fff; color: #000; border-color: #fff; }
+
+        /* --- 4. VIDEO NỀN CỐ ĐỊNH (Khi trượt tab) --- */
+        .fixed-video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
+        #fixed-video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+        
+        /* --- 5. TAB TRƯỢT --- */
+        #view-product { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: 2500; background: rgba(0, 0, 0, 0.75); 
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            transform: translateY(100%); transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+            overflow-y: auto;
+        }
+        #view-product.active { transform: translateY(0); }
+
+        .close-tab { position: sticky; top: 0; right: 0; width: 100%; display: flex; justify-content: flex-end; padding: 40px 50px; z-index: 2600; }
+        .close-btn { cursor: pointer; font-size: 0.75rem; font-weight: 900; letter-spacing: 2px; opacity: 0.6; transition: 0.3s; }
+
+        .product-content { padding-top: 50px; }
+        .row { display: flex; align-items: center; justify-content: center; margin-bottom: 200px; gap: 80px; padding: 0 10%; opacity: 0; transform: translateY(50px); transition: all 1s ease; }
+        .row:nth-child(even) { flex-direction: row-reverse; }
+        .img-box { flex: 1.2; box-shadow: 0 30px 60px rgba(0,0,0,0.5); background: #111; overflow: hidden; }
+        .img-box img { width: 100%; height: auto; display: block; }
         .text-box { flex: 0.8; }
-        .text-box h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-        .text-box p { font-size: 1.1rem; color: #ccc; line-height: 1.8; font-weight: 300; font-style: italic; }
+        .text-box h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; text-transform: uppercase; }
+        .text-box p { font-size: 1.1rem; color: #ccc; line-height: 1.8; font-style: italic; }
         .reveal { opacity: 1 !important; transform: translateY(0) !important; }
 
-        /* --- 6. HIỆU ỨNG COMING SOON GLITCH --- */
-        .coming-soon-container { height: 80vh; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .glitch-text {
-            font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; letter-spacing: 15px; position: relative; color: #fff;
-            opacity: 0; transform: translateY(30px); transition: 1s ease;
-        }
-        .reveal .glitch-text { opacity: 1; transform: translateY(0); }
-        .glitch-text::before, .glitch-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black; clip: rect(0, 0, 0, 0); }
-        .glitch-text::before { left: 2px; text-shadow: -2px 0 #ff00c1; animation: glitch-1 2s infinite linear alternate-reverse; }
-        .glitch-text::after { left: -2px; text-shadow: -2px 0 #00fff9; animation: glitch-2 3s infinite linear alternate-reverse; }
-        @keyframes glitch-1 { 0% { clip: rect(20px, 9999px, 21px, 0); } 100% { clip: rect(80px, 9999px, 95px, 0); } }
-        @keyframes glitch-2 { 0% { clip: rect(10px, 9999px, 40px, 0); } 100% { clip: rect(50px, 9999px, 70px, 0); } }
+        footer { padding: 100px 50px; text-align: center; font-size: 0.65rem; color: #444; letter-spacing: 1px; }
 
-        footer { position: relative; z-index: 2; padding: 80px 50px; text-align: center; font-size: 0.7rem; color: #555; background: #000; }
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 40px 30px; }
+            .project-name { font-size: 4rem; max-width: 100%; margin-bottom: 20px; }
+            .project-info-right { align-items: flex-start; text-align: left; width: 100%; }
+            .info-row { gap: 30px; }
+            .row, .row:nth-child(even) { flex-direction: column; gap: 40px; margin-bottom: 120px; }
+        }
     </style>
 </head>
 <body>
@@ -78,90 +111,99 @@
         <a href="index.html" class="back-btn">/ BACK TO WORKS</a>
     </header>
 
-    <div class="fixed-video-bg" id="fixed-v-bg">
+    <div class="fixed-video-bg">
         <video id="fixed-video" autoplay muted loop playsinline></video>
     </div>
-    <div class="fixed-video-blur" id="fixed-v-blur"></div>
     
     <section class="hero" id="hero-section">
         <video id="bg-video" autoplay muted loop playsinline></video>
         <h1 class="project-name" id="display-title">TITLE</h1>
+        <div class="project-info-right">
+            <div class="info-row">
+                <div class="info-item"><span>Client</span><p id="p-client">---</p></div>
+                <div class="info-item"><span>Director</span><p id="p-director">---</p></div>
+            </div>
+            <button class="credit-btn" onclick="openCredits()">Credit</button>
+        </div>
     </section>
 
-    <section id="view-product"></section>
-
-    <footer>© 2026 LAMYENMEDIA</footer>
+    <section id="view-product">
+        <div class="close-tab"><span class="close-btn" onclick="closeCredits()">✕ CLOSE</span></div>
+        <div class="product-content" id="photo-container"></div>
+        <footer>© 2026 LAMYENMEDIA</footer>
+    </section>
 
     <script>
         const projectData = [
-            { id: 0, title: "ENDLESS", type: "mixed", video: "endless.mov", imgPrefix: "img/e", count: 10 },
-            { id: 1, title: "NGOAITHUONG", type: "mixed", video: "ngoaithuong.mov", imgPrefix: "img/nt", count: 20 },
-            { id: 2, title: "LOCKNLOCK", type: "mixed", video: "locknlock.mp4", imgPrefix: "img/l", count: 10 },
-            { id: 3, title: "PRODUCT PHOTOGRAPHY", type: "photo", img: "anh1.jpg", imgPrefix: "anh", count: 23 },
+            { id: 0, title: "ENDLESS", type: "mixed", video: "endless.mov", imgPrefix: "img/e/e", count: 10, client: "THEFIRSTTAKE", director: "NHAT TU" },
+            { id: 1, title: "NGOAITHUONG", type: "mixed", video: "ngoaithuong.mov", imgPrefix: "img/nt/nt", count: 20, client: "UEF", director: "NHAT TU" },
+            { id: 2, title: "LOCKNLOCK", type: "mixed", video: "locknlock.mp4", imgPrefix: "img/l/l", count: 10, client: "Lock&Lock VN", director: "NHAT TU" },
+            { id: 3, title: "PRODUCT PHOTOGRAPHY", type: "photo", img: "anh1.jpg", imgPrefix: "img/pp/anh", count: 23, client: "UEF Multimedia", director: "NHAT TU" },
             { id: 4, title: "WASTEFUL", type: "comingsoon" }
         ];
 
-        const lifeQuotes = ["Đừng để áp lực làm mờ ánh sáng của bạn.", "Hạnh phúc ở từng bước chân.", "Sống trọn vẹn mỗi hơi thở."];
-        const loveQuotes = ["Tình yêu giống như bình giữ nhiệt: Luôn ấm áp.", "Quan tâm chân thành giữ ấm trái tim."];
-        const oldLoveQuotes = ["Tình yêu tuổi già là bến đỗ an yên.", "Cái nắm tay bạc đầu là minh chứng vĩnh cửu."];
-        const gratitudeQuotes = ["Ông bà là gốc rễ của sự trưởng thành.", "Vòng tay ông bà là nơi ấm nhất."];
-        const artQuotes = ["Nhiếp ảnh là cách cảm nhận tâm hồn.", "Ánh sáng viết nên câu chuyện."];
+        const quotes = {
+            life: ["Đừng để áp lực làm mờ ánh sáng của bạn.", "Hạnh phúc ở từng bước chân."],
+            love: ["Tình yêu luôn ấm áp.", "Quan tâm chân thành giữ ấm trái tim."],
+            oldLove: ["Tình yêu tuổi già là bến đỗ an yên.", "Cái nắm tay bạc đầu."],
+            art: ["Nhiếp ảnh là cách cảm nhận tâm hồn.", "Ánh sáng viết nên câu chuyện."]
+        };
 
         const urlId = new URLSearchParams(window.location.search).get('id') || "0";
         const data = projectData[urlId];
 
         document.getElementById('display-title').innerText = data.title;
+        document.getElementById('p-client').innerText = data.client || "---";
+        document.getElementById('p-director').innerText = data.director || "---";
 
-        const videoEl = document.getElementById('bg-video');
-        const heroEl = document.getElementById('hero-section');
-        const viewProduct = document.getElementById('view-product');
+        const bgVideo = document.getElementById('bg-video');
         const fixedVideo = document.getElementById('fixed-video');
+        const viewProduct = document.getElementById('view-product');
+        const photoContainer = document.getElementById('photo-container');
+        const heroSection = document.getElementById('hero-section');
+
+        // LOGIC XỬ LÝ NỀN (VIDEO HOẶC ẢNH) - QUAN TRỌNG NHẤT
+        if (data.type === "mixed" && data.video) {
+            bgVideo.style.display = "block";
+            bgVideo.src = data.video;
+            fixedVideo.src = data.video;
+        } else if (data.type === "photo" && data.img) {
+            bgVideo.style.display = "none"; // Ẩn video để không bị đen
+            heroSection.style.backgroundImage = `url('${data.img}')`; // Gán ảnh nền
+        }
+
+        function openCredits() {
+            viewProduct.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (photoContainer.innerHTML === "") {
+                renderPhotoRows(data.imgPrefix, data.count);
+            }
+        }
+
+        function closeCredits() {
+            viewProduct.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
 
         function renderPhotoRows(prefix, count) {
             let photoHTML = "";
             for (let i = 1; i <= count; i++) {
                 const num = i < 10 ? `0${i}` : i;
-                let quote = ""; let label = "PIECE";
-
-                if (data.title === "NGOAITHUONG") {
-                    if (i <= 10) { quote = oldLoveQuotes[(i-1)%oldLoveQuotes.length]; label = "ETERNITY"; }
-                    else { quote = gratitudeQuotes[(i-11)%gratitudeQuotes.length]; label = "GRATITUDE"; }
-                } else if (data.title === "ENDLESS") {
-                    quote = lifeQuotes[(i-1)%lifeQuotes.length]; label = "MOMENT";
-                } else if (data.title === "LOCKNLOCK") {
-                    quote = loveQuotes[(i-1)%loveQuotes.length]; label = "LOVE";
-                } else {
-                    quote = artQuotes[Math.floor(Math.random()*artQuotes.length)];
-                }
+                let quote = "Visual Series"; 
+                if(data.title === "NGOAITHUONG") quote = quotes.oldLove[i%2];
+                else if(data.title === "ENDLESS") quote = quotes.life[i%2];
+                else quote = quotes.art[i%2];
 
                 photoHTML += `<div class="row">
                     <div class="img-box"><img src="${prefix}${i}.jpg" loading="lazy"></div>
-                    <div class="text-box"><h2>${label} ${num}</h2><p>"${quote}"</p></div>
+                    <div class="text-box"><h2>PIECE ${num}</h2><p>"${quote}"</p></div>
                 </div>`;
             }
-            viewProduct.innerHTML = photoHTML;
+            photoContainer.innerHTML = photoHTML;
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('reveal'); });
             }, { threshold: 0.1 });
             document.querySelectorAll('.row').forEach(r => observer.observe(r));
-        }
-
-        if (data.type === "mixed") {
-            videoEl.style.display = "block"; videoEl.src = data.video;
-            document.getElementById('fixed-v-bg').style.display = "block";
-            document.getElementById('fixed-v-blur').style.display = "block";
-            fixedVideo.src = data.video;
-            viewProduct.style.display = "block";
-            renderPhotoRows(data.imgPrefix, data.count);
-        } else if (data.type === "photo") {
-            heroEl.style.backgroundImage = `url('${data.img}')`;
-            viewProduct.style.display = "block"; viewProduct.style.backgroundImage = `url('${data.img}')`;
-            viewProduct.classList.add('photo-mode-bg');
-            renderPhotoRows(data.imgPrefix, data.count);
-        } else if (data.type === "comingsoon") {
-            heroEl.style.background = "#111";
-            viewProduct.innerHTML = `<div class="coming-soon-container reveal"><h2 class="glitch-text" data-text="COMING SOON">COMING SOON</h2></div>`;
-            viewProduct.style.display = "block";
         }
     </script>
 </body>
