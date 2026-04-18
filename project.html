@@ -13,6 +13,27 @@
             background-color: #000; color: #fff; overflow-x: hidden;
         }
 
+        /* ROLLING TEXT CSS */
+        .rolling-text {
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            height: 1.2em;
+            line-height: 1.2em;
+            vertical-align: middle;
+        }
+        .rolling-text span {
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        .rolling-text span:last-child {
+            position: absolute;
+            top: 100%; left: 0; width: 100%;
+        }
+        .rolling-text:hover span {
+            transform: translateY(-100%);
+        }
+
         /* --- 2. HEADER --- */
         .main-header {
             position: fixed; top: 0; left: 0; width: 100%;
@@ -30,44 +51,43 @@
             position: relative; width: 100%; height: 100vh; 
             display: flex; align-items: flex-end; justify-content: space-between;
             padding: 60px 50px; overflow: hidden;
-            /* Thêm các dòng bên dưới để hỗ trợ ảnh nền */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
         }
-        /* Lớp phủ tối nhẹ để nổi bật chữ */
         .hero::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.3); z-index: 1;
         }
-
         #bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; transform: translate(-50%, -50%); object-fit: cover; z-index: 0; display: none; }
         
-        .project-name { 
+        .project-name { position: relative; z-index: 10; font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; letter-spacing: -5px; text-transform: uppercase; line-height: 0.8; max-width: 50%; }
+        
+        /* FIX: DÀN HÀNG NGANG CHO INFO */
+        .project-info-right { 
             position: relative; z-index: 10; 
-            font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; 
-            letter-spacing: -5px; text-transform: uppercase; line-height: 0.8;
-            max-width: 60%;
+            display: flex; 
+            align-items: flex-end; 
+            padding-bottom: 15px; 
         }
-
-        .project-info-right {
-            position: relative; z-index: 10;
-            text-align: right;
-            display: flex; flex-direction: column; align-items: flex-end; gap: 25px;
-            padding-bottom: 15px;
+        .info-row { 
+            display: flex; 
+            align-items: flex-end; 
+            gap: 60px; /* Khoảng cách giữa các mục */
         }
-        .info-row { display: flex; gap: 40px; }
         .info-item span { display: block; font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; }
         .info-item p { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.5px; }
-
-        .credit-btn {
-            padding: 10px 25px; border: 1px solid rgba(255,255,255,0.3);
-            background: transparent; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase;
-            letter-spacing: 2px; font-size: 0.75rem; transition: all 0.4s ease;
+        
+        /* FIX: NÚT CREDIT TRÔNG SANG HƠN */
+        .credit-btn { 
+            padding: 12px 30px; 
+            border: 1px solid rgba(255,255,255,0.3); 
+            background: transparent; color: #fff; 
+            cursor: pointer; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 2px; font-size: 0.7rem; transition: all 0.4s ease;
+            height: 45px;
         }
         .credit-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* --- 4. VIDEO NỀN CỐ ĐỊNH (Khi trượt tab) --- */
+        /* --- 4. VIDEO NỀN CỐ ĐỊNH --- */
         .fixed-video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
         #fixed-video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
         
@@ -80,35 +100,107 @@
             overflow-y: auto;
         }
         #view-product.active { transform: translateY(0); }
-
         .close-tab { position: sticky; top: 0; right: 0; width: 100%; display: flex; justify-content: flex-end; padding: 40px 50px; z-index: 2600; }
-        .close-btn { cursor: pointer; font-size: 0.75rem; font-weight: 900; letter-spacing: 2px; opacity: 0.6; transition: 0.3s; }
+        
+        /* CLOSE BTN TO VÀ ĐẬM */
+        .close-btn { 
+            cursor: pointer; font-size: 1rem; font-weight: 900; letter-spacing: 3px; opacity: 0.6; transition: 0.3s; 
+            height: 1.4em; line-height: 1.4em;
+        }
 
+        /* --- 6. CONTENT ROWS --- */
         .product-content { padding-top: 50px; }
         .row { display: flex; align-items: center; justify-content: center; margin-bottom: 200px; gap: 80px; padding: 0 10%; opacity: 0; transform: translateY(50px); transition: all 1s ease; }
         .row:nth-child(even) { flex-direction: row-reverse; }
         .img-box { flex: 1.2; box-shadow: 0 30px 60px rgba(0,0,0,0.5); background: #111; overflow: hidden; }
         .img-box img { width: 100%; height: auto; display: block; }
         .text-box { flex: 0.8; }
-        .text-box h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; text-transform: uppercase; }
-        .text-box p { font-size: 1.1rem; color: #ccc; line-height: 1.8; font-style: italic; }
+        .text-box h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; }
+        .text-box p { font-size: 1.1rem; color: #ccc; line-height: 1.8; font-style: italic; font-weight: 300; }
         .reveal { opacity: 1 !important; transform: translateY(0) !important; }
 
-        footer { padding: 100px 50px; text-align: center; font-size: 0.65rem; color: #444; letter-spacing: 1px; }
+        /* --- 7. CUSTOM FOOTER --- */
+        .custom-project-footer { padding: 100px 10% 60px 10%; background-color: #000; color: #fff; }
+        .footer-top-line { width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 60px; }
+        .footer-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 80px; }
+        .f-label { display: block; font-size: 0.65rem; color: #555; font-weight: 700; letter-spacing: 2px; margin-bottom: 25px; }
+        .f-links { display: flex; flex-direction: column; gap: 10px; }
+        .f-links a { color: #fff; text-decoration: none; font-size: 0.8rem; font-weight: 600; opacity: 0.6; transition: 0.3s; }
+        .f-links a:hover { opacity: 1; }
+        .footer-column p { font-size: 0.8rem; font-weight: 600; line-height: 1.6; color: #ccc; text-transform: uppercase; }
+        .footer-column.right { text-align: right; }
+        .footer-bottom { text-align: center; font-size: 0.6rem; color: #333; letter-spacing: 1px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; }
 
         @media (max-width: 768px) {
             .hero { flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 40px 30px; }
             .project-name { font-size: 4rem; max-width: 100%; margin-bottom: 20px; }
             .project-info-right { align-items: flex-start; text-align: left; width: 100%; }
-            .info-row { gap: 30px; }
+            .info-row { flex-direction: column; gap: 30px; }
             .row, .row:nth-child(even) { flex-direction: column; gap: 40px; margin-bottom: 120px; }
-        }
+            .footer-content { grid-template-columns: 1fr; gap: 50px; }
+            .footer-column.right { text-align: left; }
+            .hero { 
+        padding: 40px 20px; 
+        flex-direction: column; 
+        justify-content: flex-end; 
+        align-items: flex-start; 
+    }
+
+    .project-name { 
+        font-size: 3.5rem; 
+        max-width: 100%; 
+        margin-bottom: 30px; /* Khoảng cách với hàng info bên dưới */
+    }
+
+    /* ÉP 3 MỤC NẰM CHUNG 1 HÀNG */
+    .project-info-right { 
+        width: 100%; 
+        align-items: flex-start; 
+    }
+
+    .info-row { 
+        display: flex !important; 
+        flex-direction: row !important; /* Buộc nằm ngang */
+        align-items: flex-end; /* Căn theo đáy để nút và chữ đều nhau */
+        gap: 40px; /* Khoảng cách vừa phải trên màn hình nhỏ */
+        width: 100%;
+        overflow-x: auto; /* Phòng hờ tên quá dài sẽ cho phép lướt ngang nhẹ */
+        padding-bottom: 10px;
+    }
+
+    .info-item span { 
+        font-size: 0.5rem; 
+        margin-bottom: 3px; 
+    }
+
+    .info-item p { 
+        font-size: 0.7rem; 
+        white-space: nowrap; /* Tránh rớt dòng */
+    }
+
+    /* Tối ưu nút Credit trên Mobile để nằm vừa hàng ngang */
+    .credit-btn { 
+        padding: 8px 15px; 
+        font-size: 0.6rem; 
+        height: 35px; /* Thu nhỏ chiều cao */
+        letter-spacing: 1px;
+    }
+
+    .credit-btn.rolling-text {
+        height: 35px;
+        line-height: 18px; /* Căn giữa chữ trong nút nhỏ */
+    }
+}
+        
     </style>
 </head>
 <body>
 
     <header class="main-header">
-        <a href="index.html" class="back-btn">/ BACK TO WORKS</a>
+        <a href="index.html" class="back-btn rolling-text">
+            <span>/ BACK TO WORKS</span>
+            <span>/ BACK TO WORKS</span>
+        </a>
     </header>
 
     <div class="fixed-video-bg">
@@ -122,15 +214,51 @@
             <div class="info-row">
                 <div class="info-item"><span>Client</span><p id="p-client">---</p></div>
                 <div class="info-item"><span>Director</span><p id="p-director">---</p></div>
+                <div class="info-item">
+                    <button class="credit-btn rolling-text" onclick="openCredits()">
+                        <span>Credit</span>
+                        <span>Credit</span>
+                    </button>
+                </div>
             </div>
-            <button class="credit-btn" onclick="openCredits()">Credit</button>
         </div>
     </section>
 
     <section id="view-product">
-        <div class="close-tab"><span class="close-btn" onclick="closeCredits()">✕ CLOSE</span></div>
+        <div class="close-tab">
+            <span class="close-btn rolling-text" onclick="closeCredits()">
+                <span>✕ CLOSE</span>
+                <span>✕ CLOSE</span>
+            </span>
+        </div>
+        
         <div class="product-content" id="photo-container"></div>
-        <footer>© 2026 LAMYENMEDIA</footer>
+
+        <footer class="custom-project-footer">
+            <div class="footer-top-line"></div>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <span class="f-label">/ SOCIALS</span>
+                    <div class="f-links">
+                        <a href="https://www.instagram.com/_tuuxuf.raw/" target="_blank">INSTAGRAM</a>
+                        <a href="https://www.facebook.com/nhat.tu.415301" target="_blank">FACEBOOK</a>
+                        <a href="#">THREADS</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <span class="f-label">/ CONTACT</span>
+                    <p>LAMYENMEDIA@GMAIL.COM</p>
+                    <p>+84 96 384 0316</p>
+                </div>
+                <div class="footer-column right">
+                    <span class="f-label">/ PHILOSOPHY</span>
+                    <p>CREATING VISUAL STORIES<br>THAT LAST FOREVER.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 LAMYENMEDIA. ALL RIGHTS RESERVED.</p>
+            </div>
+        </footer>
     </section>
 
     <script>
@@ -139,14 +267,16 @@
             { id: 1, title: "NGOAITHUONG", type: "mixed", video: "ngoaithuong.mov", imgPrefix: "img/nt/nt", count: 20, client: "UEF", director: "NHAT TU" },
             { id: 2, title: "LOCKNLOCK", type: "mixed", video: "locknlock.mp4", imgPrefix: "img/l/l", count: 10, client: "Lock&Lock VN", director: "NHAT TU" },
             { id: 3, title: "PRODUCT PHOTOGRAPHY", type: "photo", img: "anh1.jpg", imgPrefix: "img/pp/anh", count: 23, client: "UEF Multimedia", director: "NHAT TU" },
-            { id: 4, title: "WASTEFUL", type: "comingsoon" }
+            { id: 4, title: "OCEAN FLASHLIGHT", type: "photo", img: "s1.jpg", imgPrefix: "img/s/s", count: 12, client: "Nhungduatrecogu", director: "NHAT TU" },
+            { id: 5, title: "EMPTY SCENES", type: "photo", img: "c.jpg", imgPrefix: "img/c/c", count: 17, client: "phongcanhcogu", director: "TRI MINH" }
         ];
 
         const quotes = {
-            life: ["Đừng để áp lực làm mờ ánh sáng của bạn.", "Hạnh phúc ở từng bước chân."],
-            love: ["Tình yêu luôn ấm áp.", "Quan tâm chân thành giữ ấm trái tim."],
-            oldLove: ["Tình yêu tuổi già là bến đỗ an yên.", "Cái nắm tay bạc đầu."],
-            art: ["Nhiếp ảnh là cách cảm nhận tâm hồn.", "Ánh sáng viết nên câu chuyện."]
+            life: ["Đừng để áp lực làm mờ ánh sáng của bạn.", "Hạnh phúc ở từng bước chân.", "Chúng ta sống một ngày và lặp lại nó 365 lần.", "Ranh giới giữa sống và tồn tại bị xóa nhòa.", "Đốt cháy bản thân để thắp sáng tương lai xa lạ.", "Vận hành như một cỗ máy đã quên cách mỉm cười.", "Làm mọi thứ nhưng chẳng thấy ý nghĩa gì.", "Thời gian tàn nhẫn với kẻ kẹt trong sự vội vã.", "Dùng tuổi trẻ đổi lấy sự thảnh thơi đã mất.", "Mình là con người, hay chỉ là một mắt xích?"],
+            love: ["Tình yêu luôn ấm áp và chân thành là chìa khoá giữ ấm trái tim.", "Đừng sợ thời gian làm nguội lòng mình, tình yêu là vòng lặp sưởi ấm lẫn nhau.", "Bền bỉ và nóng hổi như cách ta chạm tay vào nhau mỗi sáng.", "Ta nguyện làm lớp vỏ bọc giữ cho hơi ấm không tàn phai.", "Yêu là nguyện làm lớp cách nhiệt với thế gian, để bên trong nồng nàn.", "Như chiếc bình nâng niu vị ngọt nồng, giữ lại tinh khôi thanh xuân.", "Tuổi trẻ là tách trà đậm vị, tình yêu giữ cho vị đắng luôn thơm nồng.", "Ta không sợ thế giới lạnh lẽo, chỉ sợ lòng mình không đủ kín.", "Mặc kệ ngoài kia sương muối, trong lồng ngực này vẫn là mùa hạ.", "Giữa thế giới luôn làm nguội mọi thứ, ta chắt chiu từng rung động."],
+            oldLove: ["Nếp nhăn là bản đồ những con đường ta đã cùng đi qua.", "Cái nắm tay lúc bạc đầu là lời thề nguyện chân thực nhất.", "Hoàng hôn là lúc tình yêu tỏa ánh sáng ấm áp nhất.", "Khoảng lặng về già trở thành những bài thơ không lời.", "Dù màu phim có phai, bóng dáng người thương vẫn rõ nét.", "Đi thật chậm để chắc rằng người kia vẫn sánh bước bên mình.", "Trong mắt nhau, ta vẫn là bản đẹp nhất của mùa hạ năm ấy.", "Tuổi già yêu bằng đống tro tàn nhưng vẫn âm ỉ sưởi ấm.", "Bến đỗ bình yên là hơi thở của người cạnh bên mỗi sớm.", "Tích lũy thêm những chương rực rỡ nhất của vĩnh cửu.", "Chúng ta dành tuổi già để hiểu người ấy vẫn luôn ở đây.", "Tình yêu lúc già là sự tĩnh lặng đầy thấu cảm.", "Ta nhìn nhau bằng cả một đời thương nhớ.", "Mỗi sợi tóc bạc là một lời hứa đã thực hiện.", "Chỉ cần một chén trà ấm rót cho nhau khi gió về.", "Hạnh phúc là sự hiện diện của một bóng hình quen thuộc.", "Tuổi già bên nhau là chương đẹp nhất kiếp người.", "Nhịp tim chúng ta vẫn cùng một tần số hoài niệm.", "Tâm hồn đã hòa quyện không còn phân biệt được nữa.", "Vai tựa vào nhau là cả một thế giới bình yên."],
+            art: ["Khi ánh sáng chạm vào vật chất, một câu chuyện bắt đầu.", "Đỉnh cao của sự phức tạp là sự đơn giản tuyệt đối.", "Chúng tôi chụp cách ánh sáng yêu chiều vật thể.", "Mỗi đường cong mang trong mình một linh hồn riêng.", "Sự hoàn hảo nằm ở những chi tiết nhỏ nhất.", "Sản phẩm không còn là vật vô tri, mà là khao khát.", "Cảm nhận chất liệu chỉ qua thị giác.", "Góc nhìn khác biệt biến điều bình thường thành phi thường.", "Ánh sáng định nghĩa đẳng cấp thương hiệu.", "Sự tinh tế tự tỏa sáng trong tĩnh lặng.", "Bắt trọn khoảnh khắc tĩnh để làm nổi bật giá trị.", "Mỗi sản phẩm là lời khẳng định về tâm huyết.", "Vẻ đẹp tối giản là tiếng nói của sự sang trọng.", "Cảm xúc bắt đầu từ cái nhìn đầu tiên.", "Đặt vật phẩm vào đúng ánh sáng để tìm thấy linh hồn.", "Sự cân bằng hoàn hảo giữa thị giác và cảm xúc.", "Từng tia sáng đều được tính toán cho sự hoàn mỹ.", "Hiện thân hữu hình của những ý tưởng không giới hạn.", "Chi tiết nhỏ là chìa khóa mở ra niềm tin.", "Hài hòa giữa công năng và thẩm mỹ.", "Hãy để sản phẩm kể câu chuyện về chính nó.", "Đẳng cấp từ sự thấu hiểu cái đẹp nguyên bản.", "Khi bạn bắt đầu cảm nhận, đó là lúc nhiếp ảnh thành công."],
+            sea: ["Giữa biển đêm, chỉ cần một tia sáng là đủ.", "Ánh sáng Flashlight, đánh thức sức mạnh tiềm ẩn của đại dương.", "Sự kết hợp hoàn hảo giữa thiên nhiên và công nghệ.", "Flashlight không chỉ là ánh sáng, nó là câu chuyện của riêng bạn với biển.", "Biển cả bao la, ánh sáng là sự dẫn lối.", "Bắt trọn khoảnh khắc tuyệt vời giữa biển và ánh sáng.", "Nghệ thuật Flashlight, khám phá vẻ đẹp huyền bí của đại dương đêm.", "Sự giao thoa giữa nghệ thuật và cảm xúc trên biển.", "Chúng tôi kể câu chuyện của bạn và biển.", "Ánh sáng là niềm tin giữa biển đêm mênh mông.", "Chúng tôi chụp ánh sáng trên biển.", "Ánh sáng là sự khởi đầu của những câu chuyện mới.", "Sự hoàn hảo nằm ở sự kết hợp giữa ánh sáng và biển.", "Bắt trọn cảm xúc trong từng tấm ảnh Flashlight.", "Biển và ánh sáng là sự kết hợp tuyệt vời của thiên nhiên.", "Ánh sáng Flashlight kể câu chuyện của bạn với đại dương.", "Chúng tôi không chụp ảnh, chúng tôi tạo ra cảm xúc.", "Sự tinh tế của ánh sáng trong từng tấm ảnh.", "Biển là nguồn cảm hứng, ánh sáng là sự hoàn thiện.", "Chúng tôi kể chuyện qua ánh sáng và biển."]
         };
 
         const urlId = new URLSearchParams(window.location.search).get('id') || "0";
@@ -162,14 +292,13 @@
         const photoContainer = document.getElementById('photo-container');
         const heroSection = document.getElementById('hero-section');
 
-        // LOGIC XỬ LÝ NỀN (VIDEO HOẶC ẢNH) - QUAN TRỌNG NHẤT
         if (data.type === "mixed" && data.video) {
             bgVideo.style.display = "block";
             bgVideo.src = data.video;
             fixedVideo.src = data.video;
         } else if (data.type === "photo" && data.img) {
-            bgVideo.style.display = "none"; // Ẩn video để không bị đen
-            heroSection.style.backgroundImage = `url('${data.img}')`; // Gán ảnh nền
+            bgVideo.style.display = "none";
+            heroSection.style.backgroundImage = `url('${data.img}')`;
         }
 
         function openCredits() {
@@ -186,20 +315,37 @@
         }
 
         function renderPhotoRows(prefix, count) {
-            let photoHTML = "";
+            let html = "";
             for (let i = 1; i <= count; i++) {
                 const num = i < 10 ? `0${i}` : i;
-                let quote = "Visual Series"; 
-                if(data.title === "NGOAITHUONG") quote = quotes.oldLove[i%2];
-                else if(data.title === "ENDLESS") quote = quotes.life[i%2];
-                else quote = quotes.art[i%2];
+                let q = "Visual Series";
+                if(data.title === "NGOAITHUONG") q = quotes.oldLove[i % 20];
+                else if(data.title === "ENDLESS") q = quotes.life[i % 10];
+                else if(data.title === "LOCKNLOCK") q = quotes.love[i % 10]; 
+                else if(data.title === "VUNGTAU FLASHLIGHT") q = quotes.sea[i % 20];
+                else if(data.title === "PRODUCT PHOTOGRAPHY") q = quotes.art[i % 23];
+                else q = quotes.art[i % 2];
 
-                photoHTML += `<div class="row">
-                    <div class="img-box"><img src="${prefix}${i}.jpg" loading="lazy"></div>
-                    <div class="text-box"><h2>PIECE ${num}</h2><p>"${quote}"</p></div>
+                let label = "PIECE"; 
+                if(data.title === "VUNGTAU FLASHLIGHT") label = "WAVE";
+                else if(data.title === "LOCKNLOCK") label = "LOVE";
+                else if(data.title === "NGOAITHUONG") label = "Hồi ức số";
+                else if(data.title === "ENDLESS") label = "Vòng lặp số";
+                else if(data.title === "PRODUCT PHOTOGRAPHY") label = "Sản phẩm";
+
+                html += `
+                <div class="row">
+                    <div class="img-box">
+                        <img src="${prefix}${i}.jpg" loading="lazy">
+                    </div>
+                    <div class="text-box">
+                        <h2>${label} ${num}</h2> 
+                        <p>"${q}"</p>
+                    </div>
                 </div>`;
             }
-            photoContainer.innerHTML = photoHTML;
+            
+            photoContainer.innerHTML = html;
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('reveal'); });
             }, { threshold: 0.1 });

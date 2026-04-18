@@ -1,19 +1,45 @@
 /**
  * 1. DANH SÁCH DỰ ÁN ĐỒNG BỘ
- * Đảm bảo ID trùng khớp với project.html
  */
 const projects = [
-    { title: "ENDLESS", director: "NHAT TU", client: "UEF", color: "#8B0000" },          // ID 0
-    { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },      // ID 1
-    { title: "LOCKNLOCK", director: "NHAT TU", client: "Lock&Lock VN", color: "#D4AF37" }, // ID 2
-    { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF Multimedia", color: "#2D5A27" }, // ID 3
-    { title: "WASTEFUL", director: "NHAT TU", client: "Travel", color: "#111" }        // ID 4
+    { title: "ENDLESS", director: "NHAT TU", client: "UEF", color: "#8B0000" },
+    { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },
+    { title: "LOCKNLOCK", director: "NHAT TU", client: "Lock&Lock VN", color: "#D4AF37" },
+    { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF Multimedia", color: "#2D5A27" },
+    { title: "OCEAN FLASHLIGHT", director: "NHAT TU", client: "Nhungduatrecogu", color: "#3C7DBE" }, 
+    { title: "EMPTY SCENES", director: "TRI MINH", client: "Nhungduatrecogu", color: "#02024e" } 
 ];
 
 let currentIndex = 0;
 
 /**
- * 2. CẬP NHẬT GIAO DIỆN
+ * 2. TỰ ĐỘNG ĐỔ BANNER VÀO MỤC WORKS
+ */
+function renderWorksMenu() {
+    const worksList = document.getElementById('works-list');
+    if (!worksList) return;
+    
+    let worksHTML = "";
+    projects.forEach((p, index) => {
+        const num = (index + 1) < 10 ? `0${index + 1}` : index + 1;
+        worksHTML += `
+            <a href="project.html?id=${index}" class="work-banner-item" style="background-color: ${p.color}">
+                <div style="display: flex; align-items: center;">
+                    <span class="work-banner-num">${num}</span>
+                    <h2 class="work-banner-title rolling-text">
+                        <span>${p.title}</span>
+                        <span>${p.title}</span>
+                    </h2>
+                </div>
+                <span class="work-banner-client">/ ${p.client}</span>
+            </a>
+        `;
+    });
+    worksList.innerHTML = worksHTML;
+}
+
+/**
+ * 3. CẬP NHẬT GIAO DIỆN TRANG CHỦ
  */
 function updateProject(index) {
     const p = projects[index];
@@ -24,16 +50,9 @@ function updateProject(index) {
     
     if (!bgArea || !title) return;
 
-    // Chuyển màu nền mượt mà
     bgArea.style.backgroundColor = p.color;
-
-    // Hiệu ứng đổi màu chữ dựa trên độ sáng nền
-    const isLight = p.color === "#F5F5F0" || p.color === "#FFFFFF";
-    document.body.style.color = isLight ? "#000" : "#fff";
-
-    // Restart Animation tiêu đề
     title.classList.remove('fade');
-    void title.offsetWidth; // Trigger reflow
+    void title.offsetWidth; 
     
     title.innerText = p.title;
     if (director) director.innerText = p.director;
@@ -42,45 +61,32 @@ function updateProject(index) {
     title.classList.add('fade');
 }
 
-function nextProject() {
-    currentIndex = (currentIndex + 1) % projects.length;
-    updateProject(currentIndex);
-}
-
-function prevProject() {
-    currentIndex = (currentIndex - 1 + projects.length) % projects.length;
-    updateProject(currentIndex);
-}
+function nextProject() { currentIndex = (currentIndex + 1) % projects.length; updateProject(currentIndex); }
+function prevProject() { currentIndex = (currentIndex - 1 + projects.length) % projects.length; updateProject(currentIndex); }
 
 /**
- * 3. ĐIỀU HƯỚNG CHI TIẾT
+ * 4. ĐIỀU HƯỚNG & OVERLAYS
  */
 function goToProjectDetail() {
-    // Wasteful là dự án Coming Soon
     if (projects[currentIndex].title === "WASTEFUL") {
-        alert("This project is currently in post-production. Stay tuned!");
+        alert("This project is currently in post-production.");
     } else {
         window.location.href = `project.html?id=${currentIndex}`;
     }
 }
 
-/**
- * 4. OVERLAYS (ABOUT, CONTACT, TALENTS)
- */
 function toggleOverlay(id) {
-    const menus = ['talents-menu', 'about-menu', 'contact-menu'];
+    const menus = ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'];
     const mainContainer = document.querySelector('.main-container');
     const target = document.getElementById(id);
     
     if (!target) return;
     const isActive = target.classList.contains('active');
 
-    // Đóng tất cả các menu đang mở
     menus.forEach(m => document.getElementById(m)?.classList.remove('active'));
 
     if (!isActive) {
         target.classList.add('active');
-        // Hiệu ứng thu nhỏ và làm mờ nền khi mở menu
         if (mainContainer) {
             mainContainer.style.transform = "scale(0.95)";
             mainContainer.style.filter = (id === 'contact-menu') ? "none" : "blur(15px)";
@@ -91,9 +97,9 @@ function toggleOverlay(id) {
 }
 
 function closeAllOverlays() {
-    const menus = ['talents-menu', 'about-menu', 'contact-menu'];
-    menus.forEach(m => document.getElementById(m)?.classList.remove('active'));
-    
+    ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'].forEach(id => {
+        document.getElementById(id)?.classList.remove('active');
+    });
     const mainContainer = document.querySelector('.main-container');
     if (mainContainer) {
         mainContainer.style.transform = "scale(1)";
@@ -102,65 +108,63 @@ function closeAllOverlays() {
 }
 
 /**
- * 5. THỜI GIAN THỰC
- */
-function updateTime() {
-    const timeDisplay = document.getElementById('current-time');
-    if (!timeDisplay) return;
-    const now = new Date();
-    // Format: 14:30:05 • 06/04/2026
-    timeDisplay.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
-}
-
-/**
- * 6. XỬ LÝ VUỐT TRÊN MOBILE (SWIPE)
- */
-let touchStartX = 0;
-let touchEndX = 0;
-
-function handleSwipe() {
-    const threshold = 50; // Khoảng cách tối thiểu để tính là vuốt
-    if (touchStartX - touchEndX > threshold) nextProject(); // Vuốt sang trái
-    if (touchEndX - touchStartX > threshold) prevProject(); // Vuốt sang phải
-}
-
-/**
- * 7. SỰ KIỆN KHỞI TẠO
+ * 5. THỜI GIAN THỰC & KHỞI TẠO SỰ KIỆN
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Khởi tạo trang đầu tiên
     updateProject(0);
+    renderWorksMenu(); // Khởi tạo danh sách banner
 
-    // Chạy đồng hồ mỗi giây
-    setInterval(updateTime, 1000);
-    updateTime();
+    // Đồng hồ
+    setInterval(() => {
+        const timeDisplay = document.getElementById('live-time') || document.getElementById('current-time');
+        if (timeDisplay) {
+            const now = new Date();
+            timeDisplay.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
+        }
+    }, 1000);
 
-    // Sự kiện bàn phím
+    // Bàn phím
     document.addEventListener('keydown', (e) => {
         if (e.key === "ArrowRight") nextProject();
         if (e.key === "ArrowLeft") prevProject();
         if (e.key === "Escape") closeAllOverlays();
-        if (e.key === "Enter") goToProjectDetail();
     });
 
-    // Sự kiện Swipe Mobile trên vùng bg-area
+    // 6. LOGIC VUỐT (SWIPE) TRÊN MOBILE
     const bgArea = document.getElementById('bg-area');
-    if (bgArea) {
-        bgArea.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
+    let touchstartX = 0;
+    let touchstartY = 0;
 
-        bgArea.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
-        
-        // Nhấp vào vùng nền để vào xem chi tiết
-        bgArea.addEventListener('click', (e) => {
-            // Chỉ vào trang nếu không nhấp trúng các nút điều hướng (nếu có)
-            if(e.target.id === 'bg-area' || e.target.id === 'p-title') {
-                goToProjectDetail();
-            }
+    // Vuốt ngang đổi dự án (Chỉ ở vùng nền)
+    bgArea?.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    bgArea?.addEventListener('touchend', e => {
+        let touchendX = e.changedTouches[0].screenX;
+        if (touchstartX - touchendX > 50) nextProject();
+        if (touchendX - touchstartX > 50) prevProject();
+    }, {passive: true});
+
+    // VUỐT LÊN ĐỂ ĐÓNG MENU (Chỉ dành cho thiết bị cảm ứng)
+    if ('ontouchstart' in window) {
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('touchstart', e => {
+                touchstartY = e.changedTouches[0].screenY;
+            }, {passive: true});
+
+            overlay.addEventListener('touchend', e => {
+                let touchendY = e.changedTouches[0].screenY;
+                // Nếu vuốt lên (Y bắt đầu lớn hơn Y kết thúc) trên 70px
+                if (touchstartY - touchendY > 70) {
+                    closeAllOverlays();
+                }
+            }, {passive: true});
         });
     }
+
+    // Click vùng nền để vào project
+    bgArea?.addEventListener('click', (e) => {
+        if(e.target.id === 'bg-area' || e.target.id === 'p-title') goToProjectDetail();
+    });
 });

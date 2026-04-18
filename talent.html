@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="page-title">Talent Detail | LAMYENMEDIA</title>
+    <style>
+        /* --- 1. RESET & SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body, html {
+            width: 100%; height: auto; /* Mở để cuộn */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #000; color: #fff;
+            overflow-x: hidden; overflow-y: auto;
+        }
+
+        /* HIỆU ỨNG ROLLING TEXT */
+        .rolling-text {
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            height: 1.2em;
+            line-height: 1.2em;
+            vertical-align: middle;
+        }
+        .rolling-text span {
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        .rolling-text span:last-child {
+            position: absolute;
+            top: 100%; left: 0; width: 100%;
+        }
+        .rolling-text:hover span {
+            transform: translateY(-100%);
+        }
+
+        /* --- 2. FIXED HEADER --- */
+        .talent-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 50px; z-index: 2000; pointer-events: none;
+        }
+        .back-btn { 
+            pointer-events: auto; color: #fff; text-decoration: none; 
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; 
+            opacity: 0.4; transition: 0.3s;
+        }
+        .back-btn:hover { opacity: 1; }
+
+        /* --- 3. HERO SECTION --- */
+        .talent-wrapper {
+            display: flex; width: 100%; height: 100vh;
+        }
+
+        .info-side {
+            flex: 1; padding: 120px 80px 60px 80px;
+            background-color: #000;
+            display: flex; flex-direction: column; 
+            justify-content: center;
+            animation: fadeInRight 1s ease forwards;
+            position: relative;
+        }
+
+        .image-side { 
+            flex: 1; position: relative; overflow: hidden;
+            background-color: #111;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .image-side img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            filter: grayscale(10%); transition: 1s ease; 
+        }
+        .image-side:hover img { filter: grayscale(0%); transform: scale(1.03); }
+
+        /* Typography */
+        .main-content h1 {
+            font-size: clamp(4rem, 10vw, 12rem); font-weight: 900;
+            text-transform: uppercase; letter-spacing: -6px; line-height: 0.8;
+            margin-bottom: 20px;
+        }
+        .role { 
+            font-size: 1.1rem; text-transform: uppercase; 
+            font-weight: 300; opacity: 0.5; letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 500px;
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .talent-links { display: flex; flex-direction: column; gap: 20px; }
+        .talent-links a { 
+            color: #fff; text-decoration: none; font-weight: 700; 
+            font-size: 0.9rem; letter-spacing: 1px;
+        }
+        .talent-links a::after { content: ' ↗'; font-size: 0.7rem; opacity: 0.5; }
+
+        /* --- 4. SELECTED WORKS (LIÊN KẾT PROJECT) --- */
+        .related-works {
+            padding: 100px 80px;
+            background-color: #000;
+        }
+        .related-title {
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #444;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #111;
+            padding-bottom: 20px;
+        }
+
+        .works-banner-container { display: flex; flex-direction: column; gap: 15px; }
+        .work-banner-item {
+            width: 100%; height: 120px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; text-decoration: none; color: #fff; border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; overflow: hidden;
+        }
+        .work-banner-item:hover { transform: scale(1.01); filter: brightness(1.2); }
+        .work-banner-title { font-size: 2rem; font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
+        .work-banner-client { font-size: 0.7rem; font-weight: 700; opacity: 0.6; letter-spacing: 2px; text-transform: uppercase; }
+        .work-banner-num { font-size: 0.7rem; font-weight: 900; margin-right: 20px; opacity: 0.4; }
+
+        /* --- 5. MAGAZINE FOOTER --- */
+        .footer-note { position: absolute; bottom: 60px; left: 80px; right: 80px; pointer-events: none; }
+        .f-line { width: 100px; height: 1px; background: rgba(255,255,255,0.2); margin-bottom: 25px; }
+        .f-info { display: flex; justify-content: flex-start; gap: 60px; }
+        .f-item span { display: block; font-size: 0.55rem; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .f-item p { font-size: 0.7rem; font-weight: 700; color: #888; }
+        .f-item.copyright { margin-left: auto; text-align: right; }
+        .f-item.copyright p { color: #333; }
+
+        /* Animations */
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .talent-wrapper { flex-direction: column; height: auto; }
+            .image-side { height: 70vh; order: 1; }
+            .info-side { padding: 40px 30px; min-height: 100vh; order: 2; justify-content: flex-start; }
+            .related-works { padding: 60px 25px; }
+            .work-banner-item { height: 90px; padding: 0 20px; }
+            .work-banner-title { font-size: 1.2rem; }
+            .footer-note { position: static; margin-top: 60px; padding-bottom: 40px; }
+            .f-info { flex-direction: column; gap: 25px; }
+            .f-item.copyright { text-align: left; margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="talent-header">
+        <a href="index.html" class="back-btn rolling-text">
+            <span>/ BACK TO WORKS</span>
+            <span>/ BACK TO WORKS</span>
+        </a>
+    </header>
+
+    <div class="talent-wrapper">
+        <div class="info-side">
+            <div class="main-content">
+                <h1 id="t-name">NAME</h1>
+                <p class="role" id="t-role">ROLE</p>
+                <p class="description" id="t-desc">Biography loading...</p>
+                
+                <div class="talent-links">
+                    <a href="#" id="t-ig" target="_blank" class="rolling-text">
+                        <span>INSTAGRAM</span>
+                        <span>INSTAGRAM</span>
+                    </a>
+                    <a href="#related-works-anchor" class="rolling-text">
+                        <span>SELECTED WORKS</span>
+                        <span>SELECTED WORKS</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-note">
+                <div class="f-line"></div>
+                <div class="f-info">
+                    <div class="f-item"><span>Issue</span><p>2026 / VOL.01</p></div>
+                    <div class="f-item"><span>Based in</span><p>SAIGON, VN</p></div>
+                    <div class="f-item copyright"><p>© LAMYENMEDIA</p><p>PORTFOLIO 2026</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-side">
+            <img id="t-img" src="" alt="Talent Portrait">
+        </div>
+    </div>
+
+    <section class="related-works" id="related-works-anchor">
+        <h3 class="related-title">Selected Works</h3>
+        <div class="works-banner-container" id="related-list">
+            </div>
+    </section>
+
+    <script>
+        // Dữ liệu dự án tổng (Đồng bộ với index.html)
+        const allProjects = [
+            { title: "ENDLESS", director: "NHAT TU", client: "THEFIRSTTAKE", color: "#8B0000" }, 
+            { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },   
+            { title: "LOCKNLOCK", director: "NHAT TU", client: "LOCKNLOCK VN", color: "#D4AF37" }, 
+            { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF", color: "#2D5A27" },     
+            { title: "WASTEFUL", director: "MEDIA TEAM", client: "UEF", color: "#111" },
+            { title: "VUNGTAU FLASHLIGHT", director: "NHAT TU", client: "VUNG TAU", color: "#3C7DBE" },  
+        ];
+
+        const talentData = [
+            { 
+                name: "Nhat Tu", 
+                role: "Founder/D.O.P", 
+                img: "tuu.jpg", 
+                desc: "Nhật Tú là linh hồn sáng tạo tại LAMYENMEDIA, nơi anh đặt tâm huyết và sự duy mỹ vào từng khung hình. Khởi đầu là một nhiếp ảnh gia thời trang, Tú chuyển mình sang vai trò Đạo diễn hình ảnh với khả năng xử lý chất liệu thị giác và bố cục một cách kinh ngạc. Với Tú, một dự án hoàn hảo là sự giao thoa tuyệt đối giữa bản năng nghệ sĩ và tư duy chiến lược của một người dẫn dắt.",
+                ig: "https://www.instagram.com/_tuuxuf.raw/",
+                projectIds: [0, 1, 2, 3, 5]
+            }, 
+            { 
+                name: "Duong Huy", 
+                role: "Founder/Director", 
+                img: "huy-port.jpg", 
+                desc: "Dương Huy mang đến làn gió mới cho vai trò Đạo diễn nhờ sự kết hợp giữa logic kỹ thuật của một sinh viên IT và tâm hồn điện ảnh bay bổng. Huy có khả năng cấu trúc hóa những ý tưởng phức tạp thành những thước phim mạch lạc nhưng vẫn đầy rung động. Anh tin rằng công nghệ là công cụ tối thượng để chạm đến những tầng sâu nhất của cảm xúc nhân văn.",
+                ig: "https://www.instagram.com/n.g.huyy/",
+                projectIds: [4, 5]
+            },
+            { 
+                name: "Tri Minh", 
+                role: "Founder/Director", 
+                img: "trii.jpg", 
+                desc: "Là một tay máy lão luyện, Trí Minh hiện chịu trách nhiệm hình ảnh chính, biến mọi bối cảnh đời thường trở thành những không gian điện ảnh sầm uất. Với tài năng thiên bẩm trong việc sử dụng kết cấu (texture) và ánh sáng tự nhiên, Minh có thể điều khiển cảm xúc khán giả mà không cần lời thoại. Với anh, camera chính là đôi mắt để tái định nghĩa vẻ đẹp thế giới.",
+                ig: "https://www.instagram.com/tri_minh/",
+                projectIds: [5]
+            }
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id') || 0;
+        const person = talentData[id];
+
+        if (person) {
+            document.getElementById('t-name').innerText = person.name;
+            document.getElementById('t-role').innerText = person.role;
+            document.getElementById('t-desc').innerText = person.desc;
+            document.getElementById('t-img').src = person.img;
+            document.getElementById('t-ig').href = person.ig;
+            document.getElementById('page-title').innerText = `${person.name} | LAMYENMEDIA`;
+
+            // RENDER PROJECTS LIÊN QUAN
+            const relatedList = document.getElementById('related-list');
+            let html = "";
+            person.projectIds.forEach(pId => {
+                const p = allProjects[pId];
+                const num = (pId + 1) < 10 ? `0${pId + 1}` : pId + 1;
+                html += `
+                    <a href="project.html?id=${pId}" class="work-banner-item" style="background-color: ${p.color}">
+                        <div style="display: flex; align-items: center;">
+                            <span class="work-banner-num">${num}</span>
+                            <h2 class="work-banner-title rolling-text"><span>${p.title}</span><span>${p.title}</span></h2>
+                        </div>
+                        <span class="work-banner-client">/ ${p.client || 'SOON'}</span>
+                    </a>
+                `;
+            });
+            relatedList.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

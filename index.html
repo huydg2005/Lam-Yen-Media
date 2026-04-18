@@ -14,6 +14,27 @@
             transition: color 0.5s ease;
         }
 
+        /* HIỆU ỨNG ROLLING TEXT */
+        .rolling-text {
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            height: 1.2em;
+            line-height: 1.2em;
+            vertical-align: middle;
+        }
+        .rolling-text span {
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        .rolling-text span:last-child {
+            position: absolute;
+            top: 100%; left: 0; width: 100%;
+        }
+        .rolling-text:hover span {
+            transform: translateY(-100%);
+        }
+
         /* --- 2. HEADER & MENU --- */
         .main-header {
             position: absolute; top: 0; left: 0; width: 100%;
@@ -27,7 +48,6 @@
             font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; transition: 0.3s; 
         }
         .main-nav a:hover { opacity: 1; }
-
         .menu-toggle { display: none; cursor: pointer; font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; opacity: 0.8; }
 
         /* --- 3. CÁC LỚP PHỦ (OVERLAYS) --- */
@@ -49,160 +69,230 @@
         .talents-tabs, .about-tabs, .works-tabs { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .tab { font-size: 0.7rem; color: #fff; text-transform: uppercase; border-bottom: 2px solid #fff; padding-bottom: 15px; display: inline-block; }
 
-        /* Nút Close mặc định (PC) */
-        .close-btn { 
-            position: absolute; top: 30px; right: 30px; 
-            background: none; border: none; color: rgba(255,255,255,0.4); 
-            cursor: pointer; font-size: 0.7rem; text-transform: uppercase; 
-            letter-spacing: 2px; z-index: 5000; transition: 0.3s;
-        }
-        .close-btn:hover { color: #fff; }
+        /* Nút Close mới: To hơn, đậm hơn */
+.close-btn { 
+    position: absolute; 
+    top: 30px; 
+    right: 30px; 
+    background: none; 
+    border: none; 
+    color: rgba(255,255,255,0.5); 
+    cursor: pointer; 
+    
+    /* Chỉnh thông số ở đây */
+    font-size: 1rem;           /* Tăng từ 0.7rem lên 1rem */
+    font-weight: 900;         /* Đậm nhất có thể */
+    letter-spacing: 3px;      /* Dãn chữ rộng ra cho sang */
+    text-transform: uppercase; 
+    z-index: 5000; 
+    transition: 0.3s;
+}
 
-        /* --- 4. CONTACT SECTION --- */
+.close-btn:hover { 
+    color: #fff; 
+}
+
+/* Đảm bảo khung Rolling Text bao đủ kích thước chữ mới */
+.close-btn.rolling-text {
+    height: 1.4em; /* Tăng nhẹ để không cấn chữ */
+    line-height: 1.4em;
+}
+        /* --- 4. WORKS BANNER SYSTEM --- */
+        .works-banner-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; padding-bottom: 50px; }
+        .work-banner-item {
+            width: 100%; height: 120px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; text-decoration: none; color: #fff; border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; overflow: hidden;
+        }
+        .work-banner-item:hover { transform: scale(1.01); filter: brightness(1.2); }
+        .work-banner-title { font-size: 2rem; font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
+        .work-banner-client { font-size: 0.7rem; font-weight: 700; opacity: 0.6; letter-spacing: 2px; text-transform: uppercase; }
+        .work-banner-num { font-size: 0.7rem; font-weight: 900; margin-right: 20px; opacity: 0.4; }
+
+        /* --- 5. TALENTS & CONTACT --- */
+        .director-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .director-item { opacity: 0; transform: translateY(30px); transition: 0.7s ease; text-decoration: none; color: inherit; display: block; }
+        .overlay.active .director-item { opacity: 1; transform: translateY(0); }
+        .image-box { width: 100%; aspect-ratio: 16/9; background: rgba(255,255,255,0.05); overflow: hidden; }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .director-item:hover img { transform: scale(1.05); }
+        .director-name { margin-top: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: bold; }
+
         .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 100px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .contact-section { margin-bottom: 60px; }
         .label-grey { color: rgba(255, 255, 255, 0.4); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px; }
-        .contact-info-text { font-size: 1.1rem; font-weight: 700; line-height: 1.5; text-transform: uppercase; margin-bottom: 10px; }
-        .time-text { color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; margin-top: 10px; }
-        
+        .contact-info-text { font-size: 1.1rem; font-weight: 700; line-height: 1.5; text-transform: uppercase; }
         .social-links { display: flex; gap: 15px; font-weight: 700; font-size: 0.8rem; }
         .social-links a { color: #fff; text-decoration: none; opacity: 0.5; transition: 0.3s; }
-        .social-links a:hover { opacity: 1; transform: translateY(-2px); }
-        
+        .social-links a:hover { opacity: 1; }
+
         .anti-form { display: grid; gap: 40px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .form-item { border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; }
         .form-item label { display: block; color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; margin-bottom: 15px; }
         .form-item input, .form-item textarea { width: 100%; background: none; border: none; color: #fff; font-family: inherit; font-size: 1rem; outline: none; text-transform: uppercase; }
-        .btn-tell-us { background: #1a1a1a; color: #fff; border: none; padding: 20px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.3s; border-radius: 4px; width: 100%; }
+        .btn-tell-us { background: #1a1a1a; color: #fff; border: none; padding: 20px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.3s; border-radius: 4px; display: flex; justify-content: center; align-items: center; }
         .btn-tell-us:hover { background: #fff; color: #000; }
 
-        /* --- 5. LAYOUT --- */
-        .director-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .director-item { opacity: 0; transform: translateY(30px); transition: 0.7s ease; }
-        .overlay.active .director-item { opacity: 1; transform: translateY(0); }
-        .image-box { width: 100%; aspect-ratio: 16/9; background: rgba(255,255,255,0.05); overflow: hidden; }
-        .image-box img { width: 100%; height: 100%; object-fit: cover; }
-        .director-name { margin-top: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: bold; }
-        
+        /* --- 6. MAIN LAYOUT --- */
         .main-container { transition: all 0.8s cubic-bezier(0.85, 0, 0.15, 1); width: 100%; height: 100vh; display: flex; flex-direction: column; }
         #bg-area { flex: 1; height: 100vh; display: flex; align-items: center; justify-content: space-between; position: relative; transition: background-color 0.8s ease; cursor: pointer; }
         .nav-arrow { background: none; border: none; color: inherit; font-size: 2rem; padding: 30px; cursor: pointer; z-index: 100; opacity: 0.3; }
-
+        
         .project-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 50px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
         .project-title { font-size: clamp(3rem, 10vw, 9rem); font-weight: 800; line-height: 0.9; letter-spacing: -4px; text-transform: uppercase; }
-        .project-info { text-align: right; font-size: 0.8rem; line-height: 1.6; }
-        .info-value { font-weight: bold; margin-left: 5px; }
+        
+        .project-info { display: flex; gap: 40px; }
+        .info-group { display: flex; flex-direction: column; align-items: flex-end; }
+        .info-label { font-size: 0.65rem; text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 700; margin-bottom: 4px; }
+        .info-value { font-size: 0.9rem; font-weight: bold; color: #fff; text-transform: uppercase; }
 
-        /* --- 6. TỐI ƯU MOBILE (768PX) --- */
+        /* --- 7. MOBILE (BẢN UPDATE: SWIPE + HORIZONTAL INFO) --- */
         @media (max-width: 768px) {
-            .main-header { padding: 30px 25px; }
-            .logo { font-size: 1.3rem; }
+            .main-header { padding: 25px 20px; }
+            .logo { font-size: 1.1rem; color: #fff !important; } 
             .main-nav { display: none; } 
-            .menu-toggle { display: block; } 
+            
+            /* Menu Toggle Mobile */
+            .menu-toggle { 
+                display: block; 
+                font-size: 0.7rem; 
+                color: #fff !important; 
+                border: 1px solid rgba(255,255,255,0.3); 
+                padding: 8px 15px; 
+                border-radius: 20px; 
+            }
             .nav-arrow { display: none; }
 
-            /* NÚT CLOSE CHO MOBILE - ÉP BUỘC LÊN TRÊN PHẢI */
-            .close-btn { 
-                position: fixed !important; top: 20px !important; right: 20px !important; 
-                bottom: auto !important; background: rgba(255,255,255,0.2) !important;
-                padding: 10px 20px !important; border-radius: 30px !important;
-                color: #fff !important; font-weight: 800 !important;
-                backdrop-filter: blur(10px); z-index: 9999 !important;
+            /* 1. ẨN NÚT CLOSE - DÙNG THAO TÁC VUỐT */
+            .close-btn { display: none !important; }
+
+            /* 2. THANH CHỈ DẪN VUỐT (SWIPE BAR) Ở ĐÁY MENU */
+            .overlay::after {
+                content: '';
+                position: absolute;
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 45px;
+                height: 5px;
+                background: rgba(255, 255, 255, 0.4);
+                border-radius: 10px;
+                z-index: 9999;
+            }
+            
+            /* 3. FIX MÀU CHỮ: Ép tất cả về trắng, chống lỗi chữ xanh */
+            .overlay a, .rolling-text span, .info-value, .project-title { 
+                color: #fff !important; 
+                text-decoration: none; 
+            }
+            .info-label { color: rgba(255,255,255,0.4) !important; }
+
+            /* 4. FOOTER: DIRECTOR & CLIENT CHUNG 1 HÀNG */
+            .project-footer { 
+                padding: 0 25px 60px 25px; 
+                flex-direction: column; 
+                align-items: flex-start; 
+                bottom: 20px; 
+            }
+            .project-title { 
+                font-size: 2.8rem; 
+                letter-spacing: -2px; 
+                margin-bottom: 25px; 
+                width: 100%;
+                line-height: 0.85;
             }
 
-            .project-footer { padding: 30px 25px; flex-direction: column; align-items: flex-start; bottom: 30px; }
-            .project-title { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 10px; }
-            .overlay { padding: 60px 25px 40px 25px; height: 90vh; }
-            .overlay.is-contact { height: 100vh; padding-top: 80px; }
-            .director-grid { grid-template-columns: 1fr; gap: 40px; padding-bottom: 60px; }
-            .image-box { aspect-ratio: 4/5; }
-            .contact-grid { grid-template-columns: 1fr; gap: 50px; }
-            .contact-right { order: 1; }
-            .contact-left { order: 2; padding-bottom: 80px; }
-            .form-row { grid-template-columns: 1fr; gap: 30px; }
-        }
+            .project-info { 
+                display: flex !important; 
+                flex-direction: row !important; /* Buộc nằm ngang */
+                gap: 40px; 
+                text-align: left; 
+                width: 100%;
+                border-left: 1px solid rgba(255,255,255,0.2);
+                padding-left: 15px;
+            }
+            .info-group { align-items: flex-start; }
+            .info-label { font-size: 0.55rem; }
+            .info-value { font-size: 0.75rem; white-space: nowrap; }
 
+            /* 5. OVERLAY FULL MÀN HÌNH */
+            .overlay { 
+                padding: 90px 20px 80px 20px; 
+                height: 100vh !important; 
+            }
+            .work-banner-item { height: 85px; padding: 0 15px; }
+            .work-banner-title { font-size: 1.1rem; letter-spacing: -1px; }
+            .work-banner-client { display: none; }
+        }
         .fade { animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body id="body-main">
 
-    <!-- OVERLAYS -->
     <div id="talents-menu" class="overlay">
-        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
+        <button class="close-btn rolling-text" onclick="closeAllOverlays()"><span>✕ CLOSE</span><span>✕ CLOSE</span></button>
         <div class="talents-tabs"><span class="tab">DIRECTORS / TALENTS</span></div>
         <div class="director-grid">
-            <div class="director-item"><div class="image-box"><img src="img/tu.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TU'"></div><p class="director-name">Nhat Tu</p></div>
-            <div class="director-item"><div class="image-box"><img src="img/huy.jpg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=HUY'"></div><p class="director-name">Duong Huy</p></div>
-            <div class="director-item"><div class="image-box"><img src="img/tri.jpeg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TRI'"></div><p class="director-name">Tri Minh</p></div>
-        </div>
-    </div>
-
-    <div id="mobile-nav-menu" class="overlay">
-        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
-        <div class="works-tabs"><span class="tab">MENU</span></div>
-        <div style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px;">
-            <a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ TALENTS</a>
-            <a href="javascript:void(0)" onclick="toggleOverlay('about-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ ABOUT US</a>
-            <a href="javascript:void(0)" onclick="toggleOverlay('works-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ WORKS</a>
-            <a href="javascript:void(0)" onclick="toggleOverlay('contact-menu')" style="font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff;">/ CONTACT</a>
+            <a href="talent.html?id=0" class="director-item"><div class="image-box"><img src="img/tu.jpg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TU'"></div><p class="director-name">Nhat Tu</p></a>
+            <a href="talent.html?id=1" class="director-item"><div class="image-box"><img src="img/huy.jpg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=HUY'"></div><p class="director-name">Duong Huy</p></a>
+            <a href="talent.html?id=2" class="director-item"><div class="image-box"><img src="img/tri.jpg" onerror="this.src='https://via.placeholder.com/400x225/111/fff?text=TRI'"></div><p class="director-name">Tri Minh</p></a>
         </div>
     </div>
 
     <div id="about-menu" class="overlay">
-        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
+        <button class="close-btn rolling-text" onclick="closeAllOverlays()"><span>✕ CLOSE</span><span>✕ CLOSE</span></button>
         <div class="about-tabs"><span class="tab">ABOUT US</span></div>
-        <div style="max-width: 800px; margin: 0 auto; text-align: left;">
-            <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 25px;">Chúng tôi là điểm giao thoa giữa tư duy kỹ thuật logic và tâm hồn nghệ thuật bay bổng.</p>
-            <p style="font-size: 1.1rem; opacity: 0.8;">Với <strong>LAMYENMEDIA</strong>, mỗi dự án là một hành trình kể chuyện bằng ánh sáng và cảm xúc.</p>
+        <div style="max-width: 900px; margin: 0 auto; text-align: left;">
+            <h2 style="font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 25px; font-weight: 800;">GIAO LỘ GIỮA LOGIC VÀ CẢM XÚC.</h2>
+            <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 20px; font-weight: 300; color: rgba(255,255,255,0.8);">Tại LAMYENMEDIA, chúng tôi không chỉ tạo ra hình ảnh, chúng tôi kiến tạo những trải nghiệm thị giác mang hơi thở của thời đại. Được dẫn dắt bởi đội ngũ những nhà sáng tạo trẻ đầy khao khát, chúng tôi tin rằng mỗi khung hình là một mảnh ghép của thực tại được tái hiện bằng trái tim.</p>
+            <p style="font-size: 1.2rem; line-height: 1.8; font-weight: 300; opacity: 0.6;">Dù là chụp ảnh sản phẩm tinh xảo hay những thước phim điện ảnh sâu lắng, mục tiêu duy nhất của chúng tôi là lưu giữ những gì quý giá nhất trong lớp vỏ bọc của nghệ thuật.</p>
         </div>
     </div>
 
     <div id="works-menu" class="overlay">
-        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
-        <div class="works-tabs"><span class="tab">OUR WORKS</span></div>
-        <div style="text-align: center; margin-top: 50px;"><h2 style="letter-spacing: 10px; opacity: 0.3;">COMING SOON</h2></div>
+        <button class="close-btn rolling-text" onclick="closeAllOverlays()"><span>✕ CLOSE</span><span>✕ CLOSE</span></button>
+        <div class="works-tabs"><span class="tab">OUR WORKS / PROJECTS</span></div>
+        <div class="works-banner-container" id="works-list"></div>
     </div>
 
     <div id="contact-menu" class="overlay is-contact">
-        <button class="close-btn" onclick="closeAllOverlays()">✕ CLOSE</button>
+        <button class="close-btn rolling-text" onclick="closeAllOverlays()"><span>✕ CLOSE</span><span>✕ CLOSE</span></button>
         <div class="contact-grid">
             <div class="contact-left">
-                <div class="contact-section">
-                    <span class="label-grey">/ MAIL TO</span>
-                    <p class="contact-info-text">LAMYENMEDIA@GMAIL.COM</p>
-                </div>
-                <div class="contact-section">
-                    <span class="label-grey">/ LOCATION</span>
-                    <p class="contact-info-text">TP. HO CHI MINH, VIETNAM</p>
-                    <p id="live-time" class="time-text"></p>
-                </div>
-                <div class="contact-section">
-                    <span class="label-grey">/ TELE</span>
-                    <p class="contact-info-text">+84 96 384 0316</p>
-                </div>
-                <div class="contact-section">
-                    <span class="label-grey">/ SOCIALS</span>
+                <div class="contact-section"><span class="label-grey">/ MAIL TO</span><p class="contact-info-text">LAMYENMEDIA@GMAIL.COM</p></div>
+                <div class="contact-section"><span class="label-grey">/ LOCATION</span><p class="contact-info-text">TP. HO CHI MINH, VIETNAM</p><p id="live-time" class="time-text"></p></div>
+                <div class="contact-section"><span class="label-grey">/ SOCIALS</span>
                     <div class="social-links">
-                        <a href="https://www.instagram.com/_tuuxuf.raw/" target="_blank">INSTAGRAM</a> • 
-                        <a href="https://www.facebook.com/nhat.tu.415301" target="_blank">FACEBOOK</a> • 
-                        <a href="https://www.threads.net/@_tuuxuf.raw" target="_blank">THREADS</a>
+                        <a href="https://www.instagram.com/_tuuxuf.raw/" target="_blank" class="rolling-text"><span>INSTAGRAM</span><span>INSTAGRAM</span></a> • 
+                        <a href="https://www.facebook.com/nhat.tu.415301" target="_blank" class="rolling-text"><span>FACEBOOK</span><span>FACEBOOK</span></a>
                     </div>
                 </div>
             </div>
-            <div class="contact-right">
-                <span class="label-grey">/ SAY SOMETHING COOL</span>
+            <div class="contact-right"><span class="label-grey">/ SAY SOMETHING COOL</span>
                 <form class="anti-form">
                     <div class="form-row">
                         <div class="form-item"><label>NAME</label><input type="text" id="contact-name"></div>
                         <div class="form-item"><label>EMAIL</label><input type="email" id="contact-email"></div>
                     </div>
                     <div class="form-item"><label>MESSAGE</label><textarea rows="3" id="contact-msg"></textarea></div>
-                    <button type="button" class="btn-tell-us" onclick="handleSendMail()">TELL US!</button>
+                    <button type="button" class="btn-tell-us" onclick="handleSendMail()">
+                        <span class="rolling-text"><span>TELL US!</span><span>TELL US!</span></span>
+                    </button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div id="mobile-nav-menu" class="overlay">
+        <button class="close-btn rolling-text" onclick="closeAllOverlays()"><span>✕ CLOSE</span><span>✕ CLOSE</span></button>
+        <div class="works-tabs"><span class="tab">MENU</span></div>
+        <div style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px;">
+            <a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')" class="rolling-text"><span>/ TALENTS</span><span>/ TALENTS</span></a>
+            <a href="javascript:void(0)" onclick="toggleOverlay('about-menu')" class="rolling-text"><span>/ ABOUT US</span><span>/ ABOUT US</span></a>
+            <a href="javascript:void(0)" onclick="toggleOverlay('works-menu')" class="rolling-text"><span>/ WORKS</span><span>/ WORKS</span></a>
+            <a href="javascript:void(0)" onclick="toggleOverlay('contact-menu')" class="rolling-text"><span>/ CONTACT</span><span>/ CONTACT</span></a>
         </div>
     </div>
 
@@ -212,10 +302,10 @@
             <div class="menu-toggle" onclick="toggleOverlay('mobile-nav-menu')">MENU</div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')">/ TALENTS</a></li>
-                    <li><a href="javascript:void(0)" onclick="toggleOverlay('about-menu')">/ ABOUT US</a></li>
-                    <li><a href="javascript:void(0)" onclick="toggleOverlay('works-menu')">/ WORKS</a></li>
-                    <li><a href="javascript:void(0)" onclick="toggleOverlay('contact-menu')">/ CONTACT</a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('talents-menu')" class="rolling-text"><span>/ TALENTS</span><span>/ TALENTS</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('about-menu')" class="rolling-text"><span>/ ABOUT US</span><span>/ ABOUT US</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('works-menu')" class="rolling-text"><span>/ WORKS</span><span>/ WORKS</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleOverlay('contact-menu')" class="rolling-text"><span>/ CONTACT</span><span>/ CONTACT</span></a></li>
                 </ul>
             </nav>
         </header>
@@ -240,7 +330,8 @@
             { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },   
             { title: "LOCKNLOCK", director: "NHAT TU", client: "LOCKNLOCK VN", color: "#D4AF37" }, 
             { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF", color: "#2D5A27" },     
-            { title: "WASTEFUL", director: "MEDIA TEAM", client: "UEF", color: "#111" }  
+            { title: "OCEAN FLASHLIGHT", director: "NHAT TU", client: "Nhungduatrecogu", color: "#3C7DBE" }, 
+            { title: "EMPTY SCENES", director: "TRI MINH", client: "Nhungduatrecogu", color: "#02024e" },  
         ];
 
         let currentIndex = 0;
@@ -255,8 +346,26 @@
             void title.offsetWidth; 
             title.innerText = (p.title === "WASTEFUL") ? p.title + " (SOON)" : p.title;
             document.getElementById('p-director').innerText = p.director;
-            document.getElementById('p-client').innerText = p.client;
+            document.getElementById('p-client').innerText = p.client || "---";
             title.classList.add('fade');
+        }
+
+        function renderWorksMenu() {
+            const worksList = document.getElementById('works-list');
+            let worksHTML = "";
+            projects.forEach((p, index) => {
+                const num = (index + 1) < 10 ? `0${index + 1}` : index + 1;
+                worksHTML += `
+                    <a href="project.html?id=${index}" class="work-banner-item" style="background-color: ${p.color}">
+                        <div style="display: flex; align-items: center;">
+                            <span class="work-banner-num">${num}</span>
+                            <h2 class="work-banner-title rolling-text"><span>${p.title}</span><span>${p.title}</span></h2>
+                        </div>
+                        <span class="work-banner-client">/ ${p.client || 'SOON'}</span>
+                    </a>
+                `;
+            });
+            worksList.innerHTML = worksHTML;
         }
 
         function nextProject() { currentIndex = (currentIndex + 1) % projects.length; updateProject(currentIndex); }
@@ -267,9 +376,7 @@
             const mainContainer = document.querySelector('.main-container');
             const target = document.getElementById(id);
             const isActive = target.classList.contains('active');
-            
             menus.forEach(m => document.getElementById(m).classList.remove('active'));
-            
             if (!isActive) {
                 target.classList.add('active');
                 mainContainer.style.transform = "scale(0.96)";
@@ -295,38 +402,21 @@
             const name = document.getElementById('contact-name').value;
             const message = document.getElementById('contact-msg').value;
             const email = "youngduonghuy@gmail.com";
-            if (!message) { alert("Please write something before sending!"); return; }
-            const subject = encodeURIComponent(`[Contact Portfolio] from ${name || 'Guest'}`);
-            const body = encodeURIComponent(`Name: ${name}\nMessage: ${message}`);
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+            if (!message) { alert("Please write something!"); return; }
+            window.location.href = `mailto:${email}?subject=Contact&body=${message}`;
         }
 
         function updateLiveTime() {
             const timeElement = document.getElementById('live-time');
-            if (!timeElement) return;
-            const now = new Date();
-            timeElement.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
-        }
-        setInterval(updateLiveTime, 1000);
-
-        let touchstartX = 0;
-        document.getElementById('bg-area').addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; isSwiping = false; });
-        document.getElementById('bg-area').addEventListener('touchend', e => {
-            let touchendX = e.changedTouches[0].screenX;
-            if (Math.abs(touchstartX - touchendX) > 50) {
-                isSwiping = true;
-                if (touchstartX - touchendX > 50) nextProject();
-                else prevProject();
+            if (timeElement) {
+                const now = new Date();
+                timeElement.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
             }
-        });
+        }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "ArrowRight") nextProject();
-            if (e.key === "ArrowLeft") prevProject();
-            if (e.key === "Escape") closeAllOverlays();
-        });
-
+        setInterval(updateLiveTime, 1000);
         updateProject(0);
+        renderWorksMenu();
         updateLiveTime();
     </script>
 </body>
