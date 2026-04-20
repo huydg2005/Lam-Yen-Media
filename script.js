@@ -2,23 +2,90 @@
  * 1. DANH SÁCH DỰ ÁN ĐỒNG BỘ
  */
 const projects = [
-    { title: "ENDLESS", director: "NHAT TU", client: "UEF", color: "#8B0000" },
+    { title: "ENDLESS", director: "NHAT TU", client: "THEFIRSTTAKE", color: "#8B0000" },
     { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },
     { title: "LOCKNLOCK", director: "NHAT TU", client: "Lock&Lock VN", color: "#D4AF37" },
     { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF Multimedia", color: "#2D5A27" },
     { title: "OCEAN FLASHLIGHT", director: "NHAT TU", client: "Nhungduatrecogu", color: "#3C7DBE" }, 
-    { title: "EMPTY SCENES", director: "TRI MINH", client: "Nhungduatrecogu", color: "#02024e" } 
+    { title: "EMPTY SCENES", director: "TRI MINH", client: "Phongcanhcogu", color: "#02024e" } 
 ];
 
+const textData = {
+    title: "LAMYENMEDIA",
+    p1: "Tại LAMYENMEDIA, chúng tôi không chỉ tạo ra hình ảnh, chúng tôi kiến tạo những trải nghiệm thị giác mang hơi thở của thời đại. Được dẫn dắt bởi đội ngũ những nhà sáng tạo trẻ đầy khao khát, chúng tôi tin rằng mỗi khung hình là một mảnh ghép của thực tại được tái hiện bằng trái tim.",
+    p2: "Dù là chụp ảnh sản phẩm tinh xảo hay những thước phim điện ảnh sâu lắng, mục tiêu duy nhất của chúng tôi là lưu giữ những gì quý giá nhất trong lớp vỏ bọc của nghệ thuật."
+};
+
 let currentIndex = 0;
+let isTyping = false; 
+let isSwiping = false; 
 
 /**
- * 2. TỰ ĐỘNG ĐỔ BANNER VÀO MỤC WORKS
+ * 2. HIỆU ỨNG ĐÁNH MÁY (TYPING)
  */
+function runTypingEffect() {
+    if (isTyping) return; 
+
+    const titleEl = document.getElementById('type-title');
+    const p1El = document.getElementById('type-p1');
+    const p2El = document.getElementById('type-p2');
+
+    if (!titleEl || !p1El || !p2El) return;
+
+    titleEl.innerText = ""; p1El.innerText = ""; p2El.innerText = "";
+    isTyping = true;
+
+    function type(element, text, speed, callback) {
+        let charIndex = 0;
+        element.classList.add('typing');
+        
+        function typing() {
+            if (charIndex < text.length) {
+                element.innerText += text.charAt(charIndex);
+                charIndex++;
+                setTimeout(typing, speed);
+            } else {
+                element.classList.remove('typing');
+                if (callback) callback();
+                else isTyping = false; 
+            }
+        }
+        typing();
+    }
+
+    type(titleEl, textData.title, 50, () => {
+        type(p1El, textData.p1, 20, () => {
+            type(p2El, textData.p2, 20);
+        });
+    });
+}
+
+/**
+ * 3. GIAO DIỆN & ĐIỀU HƯỚNG
+ */
+function updateProject(index) {
+    const p = projects[index];
+    const bgArea = document.getElementById('bg-area');
+    const title = document.getElementById('p-title');
+    const directorEl = document.getElementById('p-director');
+    const clientEl = document.getElementById('p-client');
+
+    if (!bgArea || !title) return;
+
+    bgArea.style.backgroundColor = p.color;
+    title.classList.remove('fade');
+    void title.offsetWidth; 
+    title.innerText = p.title;
+    
+    if (directorEl) directorEl.innerText = p.director;
+    if (clientEl) clientEl.innerText = p.client;
+    
+    title.classList.add('fade');
+}
+
 function renderWorksMenu() {
     const worksList = document.getElementById('works-list');
     if (!worksList) return;
-    
     let worksHTML = "";
     projects.forEach((p, index) => {
         const num = (index + 1) < 10 ? `0${index + 1}` : index + 1;
@@ -26,70 +93,31 @@ function renderWorksMenu() {
             <a href="project.html?id=${index}" class="work-banner-item" style="background-color: ${p.color}">
                 <div style="display: flex; align-items: center;">
                     <span class="work-banner-num">${num}</span>
-                    <h2 class="work-banner-title rolling-text">
-                        <span>${p.title}</span>
-                        <span>${p.title}</span>
-                    </h2>
+                    <h2 class="work-banner-title rolling-text"><span>${p.title}</span><span>${p.title}</span></h2>
                 </div>
                 <span class="work-banner-client">/ ${p.client}</span>
-            </a>
-        `;
+            </a>`;
     });
     worksList.innerHTML = worksHTML;
-}
-
-/**
- * 3. CẬP NHẬT GIAO DIỆN TRANG CHỦ
- */
-function updateProject(index) {
-    const p = projects[index];
-    const bgArea = document.getElementById('bg-area');
-    const title = document.getElementById('p-title');
-    const director = document.getElementById('p-director');
-    const client = document.getElementById('p-client');
-    
-    if (!bgArea || !title) return;
-
-    bgArea.style.backgroundColor = p.color;
-    title.classList.remove('fade');
-    void title.offsetWidth; 
-    
-    title.innerText = p.title;
-    if (director) director.innerText = p.director;
-    if (client) client.innerText = p.client;
-    
-    title.classList.add('fade');
 }
 
 function nextProject() { currentIndex = (currentIndex + 1) % projects.length; updateProject(currentIndex); }
 function prevProject() { currentIndex = (currentIndex - 1 + projects.length) % projects.length; updateProject(currentIndex); }
 
-/**
- * 4. ĐIỀU HƯỚNG & OVERLAYS
- */
-function goToProjectDetail() {
-    if (projects[currentIndex].title === "WASTEFUL") {
-        alert("This project is currently in post-production.");
-    } else {
-        window.location.href = `project.html?id=${currentIndex}`;
-    }
-}
-
 function toggleOverlay(id) {
     const menus = ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'];
     const mainContainer = document.querySelector('.main-container');
     const target = document.getElementById(id);
-    
     if (!target) return;
-    const isActive = target.classList.contains('active');
 
+    const isActive = target.classList.contains('active');
     menus.forEach(m => document.getElementById(m)?.classList.remove('active'));
 
     if (!isActive) {
         target.classList.add('active');
-        if (mainContainer) {
-            mainContainer.style.transform = "scale(0.95)";
-            mainContainer.style.filter = (id === 'contact-menu') ? "none" : "blur(15px)";
+        if (mainContainer) mainContainer.style.transform = "scale(0.95)";
+        if (id === 'about-menu') {
+            setTimeout(runTypingEffect, 600);
         }
     } else {
         closeAllOverlays();
@@ -101,18 +129,16 @@ function closeAllOverlays() {
         document.getElementById(id)?.classList.remove('active');
     });
     const mainContainer = document.querySelector('.main-container');
-    if (mainContainer) {
-        mainContainer.style.transform = "scale(1)";
-        mainContainer.style.filter = "none";
-    }
+    if (mainContainer) mainContainer.style.transform = "scale(1)";
+    isTyping = false; 
 }
 
 /**
- * 5. THỜI GIAN THỰC & KHỞI TẠO SỰ KIỆN
+ * 4. KHỞI TẠO & SỰ KIỆN
  */
 document.addEventListener('DOMContentLoaded', () => {
     updateProject(0);
-    renderWorksMenu(); // Khởi tạo danh sách banner
+    renderWorksMenu();
 
     // Đồng hồ
     setInterval(() => {
@@ -130,41 +156,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === "Escape") closeAllOverlays();
     });
 
-    // 6. LOGIC VUỐT (SWIPE) TRÊN MOBILE
+    // VUỐT (SWIPE) MOBILE
     const bgArea = document.getElementById('bg-area');
-    let touchstartX = 0;
-    let touchstartY = 0;
+    let startX = 0, startY = 0;
 
-    // Vuốt ngang đổi dự án (Chỉ ở vùng nền)
-    bgArea?.addEventListener('touchstart', e => {
-        touchstartX = e.changedTouches[0].screenX;
+    bgArea?.addEventListener('touchstart', e => { 
+        startX = e.changedTouches[0].screenX; 
+        isSwiping = false; 
     }, {passive: true});
 
     bgArea?.addEventListener('touchend', e => {
-        let touchendX = e.changedTouches[0].screenX;
-        if (touchstartX - touchendX > 50) nextProject();
-        if (touchendX - touchstartX > 50) prevProject();
+        let diff = startX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) { 
+            isSwiping = true; 
+            diff > 0 ? nextProject() : prevProject(); 
+        }
     }, {passive: true});
 
-    // VUỐT LÊN ĐỂ ĐÓNG MENU (Chỉ dành cho thiết bị cảm ứng)
-    if ('ontouchstart' in window) {
-        document.querySelectorAll('.overlay').forEach(overlay => {
-            overlay.addEventListener('touchstart', e => {
-                touchstartY = e.changedTouches[0].screenY;
-            }, {passive: true});
+    document.querySelectorAll('.overlay').forEach(overlay => {
+        overlay.addEventListener('touchstart', e => { startY = e.changedTouches[0].screenY; }, {passive: true});
+        overlay.addEventListener('touchend', e => {
+            if (startY - e.changedTouches[0].screenY > 70) closeAllOverlays();
+        }, {passive: true});
+    });
 
-            overlay.addEventListener('touchend', e => {
-                let touchendY = e.changedTouches[0].screenY;
-                // Nếu vuốt lên (Y bắt đầu lớn hơn Y kết thúc) trên 70px
-                if (touchstartY - touchendY > 70) {
-                    closeAllOverlays();
-                }
-            }, {passive: true});
-        });
-    }
-
-    // Click vùng nền để vào project
     bgArea?.addEventListener('click', (e) => {
-        if(e.target.id === 'bg-area' || e.target.id === 'p-title') goToProjectDetail();
+        if (!isSwiping && (e.target.id === 'bg-area' || e.target.id === 'p-title')) {
+            window.location.href = `project.html?id=${currentIndex}`;
+        }
     });
 });

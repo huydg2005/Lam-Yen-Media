@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <title>LAMYENMEDIA | Portfolio</title>
     <style>
         /* --- 1. SETUP CHUNG --- */
@@ -13,7 +14,18 @@
             background-color: #000; color: #fff; overflow: hidden;
             transition: color 0.5s ease;
         }
+        /* HIỆU ỨNG ĐÁNH MÁY (TYPING CURSOR) */
+        .typing::after { content: '|'; animation: blinkCursor 0.8s infinite; margin-left: 5px; color: #fff; }
+        @keyframes blinkCursor { 50% { opacity: 0; } }
 
+        /* HIỆU ỨNG ROLLING TEXT */
+        .rolling-text {
+            display: inline-block; overflow: hidden; position: relative;
+            height: 1.2em; line-height: 1.2em; vertical-align: middle;
+        }
+        .rolling-text span { display: block; transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1); }
+        .rolling-text span:last-child { position: absolute; top: 100%; left: 0; width: 100%; }
+        .rolling-text:hover span { transform: translateY(-100%); }
         /* HIỆU ỨNG ROLLING TEXT */
         .rolling-text {
             display: inline-block;
@@ -41,7 +53,13 @@
             display: flex; justify-content: space-between; align-items: center;
             padding: 40px 50px; z-index: 1000;
         }
-        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .logo {font-style: italic;
+            font-family: 'Anton', sans-serif; /* Sử dụng font Anton */
+    font-size: 2.2rem;               /* Tăng size nhẹ vì Anton hơi hẹp */
+    font-weight: 400;                /* Anton chỉ có 1 trọng lượng mặc định là đậm */
+    letter-spacing: 1px;             /* Dãn chữ ra một chút cho sang */
+    text-transform: uppercase; 
+    line-height: 1; }
         .main-nav ul { display: flex; list-style: none; gap: 35px; }
         .main-nav a { 
             text-decoration: none; color: inherit; opacity: 0.6;
@@ -146,6 +164,62 @@
         .info-group { display: flex; flex-direction: column; align-items: flex-end; }
         .info-label { font-size: 0.65rem; text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 700; margin-bottom: 4px; }
         .info-value { font-size: 0.9rem; font-weight: bold; color: #fff; text-transform: uppercase; }
+        /* --- 5. TALENTS: FIX LỖI KHOẢNG ĐEN KHI FLIP --- */
+        .director-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+            perspective: 2000px; /* Tăng độ sâu để cú lật nhìn sang hơn */
+        }
+
+        .image-box { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: #000; 
+            overflow: hidden; 
+            transform-style: preserve-3d;
+            border-radius: 4px;
+        }
+
+        .image-box img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: grayscale(100%) brightness(0.2);
+            /* Quan trọng: Để visible để không bị mất hình khi xoay nghiêng */
+            backface-visibility: visible; 
+            -webkit-backface-visibility: visible;
+            
+            /* Cú lật với độ trễ và nảy nhẹ (Elastic feeling) */
+            transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.5s ease;
+        }
+
+        /* HOVER: Lật 360 độ + Phóng to 1.1 lần để che khoảng trống */
+        .director-item:hover img { 
+            filter: grayscale(0%) brightness(1); 
+            transform: rotateY(360deg) scale(1.1); 
+            /* Thêm một chút đổ bóng trắng mờ khi đang lật cho nghệ */
+            box-shadow: 0 0 50px rgba(255,255,255,0.1);
+        }
+
+        .director-name { 
+            margin-top: 15px; 
+            font-size: 0.85rem; 
+            color: rgba(255,255,255,0.4); 
+            text-transform: uppercase; 
+            font-weight: bold; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .director-item:hover .director-name { 
+            color: #fff; 
+            letter-spacing: 2px; /* Tên dãn ra nhẹ khi hover */
+            transform: translateY(5px);
+        }
+        #about-menu h2, 
+#about-menu p {
+    font-style: italic;
+}
 
         /* --- 7. MOBILE (BẢN UPDATE: SWIPE + HORIZONTAL INFO) --- */
         @media (max-width: 768px) {
@@ -224,6 +298,7 @@
             .work-banner-item { height: 85px; padding: 0 15px; }
             .work-banner-title { font-size: 1.1rem; letter-spacing: -1px; }
             .work-banner-client { display: none; }
+            
         }
         .fade { animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -245,9 +320,9 @@
         <button class="close-btn rolling-text" onclick="closeAllOverlays()"><span>✕ CLOSE</span><span>✕ CLOSE</span></button>
         <div class="about-tabs"><span class="tab">ABOUT US</span></div>
         <div style="max-width: 900px; margin: 0 auto; text-align: left;">
-            <h2 style="font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 25px; font-weight: 800;">GIAO LỘ GIỮA LOGIC VÀ CẢM XÚC.</h2>
-            <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 20px; font-weight: 300; color: rgba(255,255,255,0.8);">Tại LAMYENMEDIA, chúng tôi không chỉ tạo ra hình ảnh, chúng tôi kiến tạo những trải nghiệm thị giác mang hơi thở của thời đại. Được dẫn dắt bởi đội ngũ những nhà sáng tạo trẻ đầy khao khát, chúng tôi tin rằng mỗi khung hình là một mảnh ghép của thực tại được tái hiện bằng trái tim.</p>
-            <p style="font-size: 1.2rem; line-height: 1.8; font-weight: 300; opacity: 0.6;">Dù là chụp ảnh sản phẩm tinh xảo hay những thước phim điện ảnh sâu lắng, mục tiêu duy nhất của chúng tôi là lưu giữ những gì quý giá nhất trong lớp vỏ bọc của nghệ thuật.</p>
+            <h2 id="type-title" style="font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 25px; font-weight: 800; color: #fff; min-height: 1.2em;"></h2>
+            <p id="type-p1" style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 20px; font-weight: 300; color: rgba(255,255,255,0.8); min-height: 3em;"></p>
+            <p id="type-p2" style="font-size: 1.2rem; line-height: 1.8; font-weight: 300; opacity: 0.6; min-height: 2em;"></p>
         </div>
     </div>
 
@@ -323,101 +398,8 @@
             </div>
         </footer>
     </div>
-
-    <script>
-        const projects = [
-            { title: "ENDLESS", director: "NHAT TU", client: "THEFIRSTTAKE", color: "#8B0000" }, 
-            { title: "NGOAITHUONG", director: "NHAT TU", client: "UEF", color: "#001F3F" },   
-            { title: "LOCKNLOCK", director: "NHAT TU", client: "LOCKNLOCK VN", color: "#D4AF37" }, 
-            { title: "PRODUCT PHOTOGRAPHY", director: "NHAT TU", client: "UEF", color: "#2D5A27" },     
-            { title: "OCEAN FLASHLIGHT", director: "NHAT TU", client: "Nhungduatrecogu", color: "#3C7DBE" }, 
-            { title: "EMPTY SCENES", director: "TRI MINH", client: "Nhungduatrecogu", color: "#02024e" },  
-        ];
-
-        let currentIndex = 0;
-        let isSwiping = false;
-
-        function updateProject(index) {
-            const p = projects[index];
-            const bgArea = document.getElementById('bg-area');
-            const title = document.getElementById('p-title');
-            bgArea.style.backgroundColor = p.color;
-            title.classList.remove('fade');
-            void title.offsetWidth; 
-            title.innerText = (p.title === "WASTEFUL") ? p.title + " (SOON)" : p.title;
-            document.getElementById('p-director').innerText = p.director;
-            document.getElementById('p-client').innerText = p.client || "---";
-            title.classList.add('fade');
-        }
-
-        function renderWorksMenu() {
-            const worksList = document.getElementById('works-list');
-            let worksHTML = "";
-            projects.forEach((p, index) => {
-                const num = (index + 1) < 10 ? `0${index + 1}` : index + 1;
-                worksHTML += `
-                    <a href="project.html?id=${index}" class="work-banner-item" style="background-color: ${p.color}">
-                        <div style="display: flex; align-items: center;">
-                            <span class="work-banner-num">${num}</span>
-                            <h2 class="work-banner-title rolling-text"><span>${p.title}</span><span>${p.title}</span></h2>
-                        </div>
-                        <span class="work-banner-client">/ ${p.client || 'SOON'}</span>
-                    </a>
-                `;
-            });
-            worksList.innerHTML = worksHTML;
-        }
-
-        function nextProject() { currentIndex = (currentIndex + 1) % projects.length; updateProject(currentIndex); }
-        function prevProject() { currentIndex = (currentIndex - 1 + projects.length) % projects.length; updateProject(currentIndex); }
-        
-        function toggleOverlay(id) {
-            const menus = ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'];
-            const mainContainer = document.querySelector('.main-container');
-            const target = document.getElementById(id);
-            const isActive = target.classList.contains('active');
-            menus.forEach(m => document.getElementById(m).classList.remove('active'));
-            if (!isActive) {
-                target.classList.add('active');
-                mainContainer.style.transform = "scale(0.96)";
-                mainContainer.style.filter = (id === 'contact-menu') ? "none" : "blur(15px)";
-            } else { closeAllOverlays(); }
-        }
-
-        function closeAllOverlays() {
-            ['talents-menu', 'about-menu', 'contact-menu', 'works-menu', 'mobile-nav-menu'].forEach(id => document.getElementById(id).classList.remove('active'));
-            const mainContainer = document.querySelector('.main-container');
-            mainContainer.style.transform = "scale(1)";
-            mainContainer.style.filter = "none";
-        }
-
-        function handleBgClick(e) {
-            if (isSwiping) return;
-            if (e.target.id === 'bg-area' || e.target.id === 'p-title') {
-                window.location.href = `project.html?id=${currentIndex}`;
-            }
-        }
-
-        function handleSendMail() {
-            const name = document.getElementById('contact-name').value;
-            const message = document.getElementById('contact-msg').value;
-            const email = "youngduonghuy@gmail.com";
-            if (!message) { alert("Please write something!"); return; }
-            window.location.href = `mailto:${email}?subject=Contact&body=${message}`;
-        }
-
-        function updateLiveTime() {
-            const timeElement = document.getElementById('live-time');
-            if (timeElement) {
-                const now = new Date();
-                timeElement.innerText = now.toLocaleTimeString('en-GB') + ' • ' + now.toLocaleDateString('en-GB');
-            }
-        }
-
-        setInterval(updateLiveTime, 1000);
-        updateProject(0);
-        renderWorksMenu();
-        updateLiveTime();
-    </script>
+    <script src="script.js"></script>
+</body>
+</html>
 </body>
 </html>
